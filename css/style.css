@@ -1,7 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+@font-face {
+  font-family: 'Nura';
+  src: url('../fonts/Nura-Normal.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Lato, sans-serif;
+  color: #969494;
+
+}
+
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
   padding: 20px;
+  background: #262626;
+}
+
+.creditos-container {
+  width: 100%;
+  height: 4vh;
+
+
+}
+
+.creditos-container input {
+  border: 1px solid #969494;
+  height: 50%;
+  background: none;
+}
+
+.creditos-container button {
+  height: 100% !important;
+  width: 100px !important;
+
+}
+
+.creditos-container label {
+  font-family: Nura;
+  font-size: 20px;
+  margin-right: 3%;
+}
+
+button {
+  border: 1px solid #969494;
+  background: none;
+  color: #969494;
+  padding: 5px;
+  cursor: pointer;
+
+}
+
+.filtros button {
+  width: auto;
+  padding: 5px;
 }
 
 .container {
@@ -22,6 +79,12 @@ body {
   margin-top: 10px;
 }
 
+#loja {
+  background: #434343 !important;
+  font-family: Lato !important;
+  border: none !important;
+}
+
 .itens-loja {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -30,17 +93,11 @@ body {
 }
 
 .item {
+  background: #5D5D5D !important;
   padding: 15px;
-  border: 1px solid #ddd;
-  position: relative;
+  border: none !important;
 }
 
-.edicao-container {
-  display: none;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed #ddd;
-}
 
 .input-preco {
   width: 80px;
@@ -73,6 +130,12 @@ body {
   object-fit: cover;
 }
 
+
+
+
+
+
+
 .modal {
   display: none;
   position: fixed;
@@ -81,27 +144,35 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
 }
 
 .modal-conteudo {
-  background-color: white;
+  background-color: #434343;
   padding: 20px;
   width: 300px;
+  padding: 20px;
 }
 
 .modal-conteudo input {
+  margin-top: 10px;
+  border: 1px solid #969494;
+  height: 50%;
+  background: none;
   width: 100%;
   padding: 8px;
   margin-bottom: 15px;
   box-sizing: border-box;
+  background: none;
 }
 
 .modal-botoes {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 10px;
 }
 
@@ -129,8 +200,80 @@ body {
   opacity: 0;
 }
 
+
+
+
+
+
+
 #adicionar-jogador:disabled {
   cursor: not-allowed;
 }
 
+.item {
+  padding: 10px;
+  margin: 5px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  cursor: grab;
+  user-select: none;
+}
 
+.item.dragging {
+  opacity: 0.5;
+  background: #e0e0e0;
+}
+
+.card-jogador {
+  padding: 15px;
+  margin: 10px;
+  border: 2px solid #ccc;
+  min-height: 100px;
+}
+
+.card-jogador.highlight-drop {
+  border-color: #4CAF50;
+  background: #f8fff8;
+}
+
+.itens-jogador {
+  min-height: 50px;
+  margin: 10px 0;
+}
+
+.botao-adicionar-todos {
+  float: right;
+  cursor: pointer;
+}
+
+/* Estilo para o container da loja */
+#loja {
+  max-height: 400px;
+  /* Altura máxima antes de aparecer a barra de rolagem */
+  overflow-y: auto;
+  /* Habilita rolagem vertical quando necessário */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Estilo opcional para a barra de rolagem (melhora a aparência) */
+#loja::-webkit-scrollbar {
+  width: 8px;
+}
+
+#loja::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: none;
+}
+
+#loja::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: none;
+}
+
+#loja::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

@@ -40,192 +40,206 @@ let itensLoja = [
   { nome: "Mina de Ondas de Choque", preco: 3000, categoria: "arremessaveis" }
 ];
 
+// Variáveis globais
 const MAX_JOGADORES = 6;
-let filtroAtivo = "todos";
 let jogadores = [];
+let filtroAtivo = "todos";
+let draggedItem = null;
 
+// Inicialização quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', function() {
+  // Configurar eventos
+  document.getElementById('creditosInput').addEventListener('input', function() {
+      if (this.value < 0) this.value = 0;
+      atualizarTela();
+  });
+  
+  document.getElementById('adicionar-jogador').addEventListener('click', mostrarModalJogador);
+  document.getElementById('confirmar-jogador').addEventListener('click', adicionarJogador);
+  document.getElementById('resetar-loja').addEventListener('click', resetarLoja);
+  
+  // Configurar drag and drop
+  configurarDragAndDrop();
+  
+  // Atualizar a tela inicial
+  atualizarTela();
+});
+
+// Função principal para atualizar toda a interface
 function atualizarTela() {
   filtrarItens();
   atualizarListaJogadores();
-  atualizarResumoFinanceiro();
+  calcularResumoFinanceiro();
 }
 
+// Filtra os itens da loja baseado no crédito e categoria
 function filtrarItens() {
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
   const lojaDiv = document.getElementById("loja");
   
-  lojaDiv.innerHTML = itensLoja
-    .filter(item => 
-      item.preco <= creditos && 
-      (filtroAtivo === "todos" || item.categoria === filtroAtivo)
-    )
-    .map(item => {
-      const quantidade = Math.floor(creditos / item.preco);
-      const itemIndex = itensLoja.indexOf(item);
-      
-      return `
-        <div class="item">
-          <strong>${item.nome}</strong> - $${item.preco.toLocaleString()}${quantidade > 1 ? ` (${quantidade}x)` : ''}
-          ${jogadores.length > 0 ? `
-            <div class="botoes-jogadores">
-              <button class="botao-adicionar-todos" onclick="adicionarItemAoTodos(${itemIndex})">+ Todos</button>
-              ${jogadores.map((jogador, idx) => `
-                <button class="botao-adicionar" onclick="adicionarItem(${idx}, ${itemIndex})">+ ${jogador.nome}</button>
-              `).join('')}
-            </div>
-          ` : ''}
-          <button class="botao-editar" onclick="iniciarEdicao(${itemIndex})">✏️</button>
-          <span class="edicao-container" id="edicao-${itemIndex}" style="display:none">
-            $<input type="number" class="input-preco" id="input-${itemIndex}" value="${item.preco}" min="0">
-            <button class="botao-salvar" onclick="salvarPreco(${itemIndex})">✔️</button>
-            <button class="botao-cancelar" onclick="cancelarEdicao(${itemIndex})">❌</button>
-          </span>
-        </div>
-      `;
-    })
-    .join('') || `<p>Nenhum item ${filtroAtivo === 'todos' ? 'disponível' : 'nesta categoria'} dentro do orçamento.</p>`;
-}
-
-function atualizarListaJogadores() {
-  const container = document.getElementById('lista-jogadores');
-  container.innerHTML = jogadores
-    .map((jogador, index) => `
-      <div class="card-jogador">
-        <div class="avatar-container">
-          <img src="images/avatars/${jogador.foto}" alt="${jogador.nome}" class="avatar">
-        </div>
-        <h3>${jogador.nome}</h3>
-        <div class="itens-jogador">
-          ${jogador.itens.map((item, itemIndex) => `
-            <div>
-              ${item.nome} - $${item.preco.toLocaleString()}
-              <button class="botao-remover-item" onclick="removerItem(${index}, ${itemIndex})">❌</button>
-            </div>
-          `).join('')}
-        </div>
-        <p>Total: $<span class="total-jogador">${jogador.total.toLocaleString()}</span></p>
-        <button class="botao-remover" onclick="removerJogador(${index})">Remover</button>
+  // Filtra e mapeia mantendo o índice original
+  const itensFiltrados = itensLoja
+    .map((item, indexOriginal) => ({ ...item, indexOriginal }))
+    .filter(item => item.preco <= creditos && (filtroAtivo === "todos" || item.categoria === filtroAtivo));
+  
+  lojaDiv.innerHTML = itensFiltrados
+    .map((item) => `
+      <div class="item" draggable="true" data-index="${item.indexOriginal}">
+        <strong>${item.nome}</strong> - $${item.preco.toLocaleString()}
       </div>
     `)
     .join('');
 }
 
-const gerenciarJogadores = {
-  adicionar: (nome, foto) => {
-    if (jogadores.length >= MAX_JOGADORES) return alert(`Limite de ${MAX_JOGADORES} jogadores!`);
-    if (jogadores.some(j => j.nome === nome)) return alert('Jogador já existe!');
-    
-    jogadores.push({ nome, foto, itens: [], total: 0 });
-    document.getElementById('modal-jogador').style.display = 'none';
-    document.getElementById('nome-jogador').value = '';
-    atualizarTela();
-  },
+// Atualiza a lista de jogadores na tela
+function atualizarListaJogadores() {
+  const container = document.getElementById('lista-jogadores');
+  container.innerHTML = jogadores.map((jogador, index) => `
+    <div class="card-jogador" data-index="${index}">
+      <img src="images/avatars/${jogador.foto}" alt="${jogador.nome}" width="50">
+      <h3>${jogador.nome}</h3>
+      <div class="itens-jogador">
+        ${jogador.itens.map((item, itemIndex) => `
+          <div class="item-jogador">
+            ${item.nome} - $${item.preco.toLocaleString()}
+            <button onclick="removerItem(${index}, ${itemIndex})">❌</button>
+          </div>
+        `).join('')}
+      </div>
+      <p>Total: $${jogador.total.toLocaleString()}</p>
+      <button onclick="removerJogador(${index})">Remover</button>
+    </div>
+  `).join('');
+}
 
-  remover: (index) => {
+// Configura o sistema de drag and drop
+function configurarDragAndDrop() {
+  document.addEventListener('dragstart', function(e) {
+    if (e.target.classList.contains('item')) {
+      draggedItem = e.target;
+      e.target.classList.add('dragging');
+    }
+  });
+
+  document.addEventListener('dragend', function(e) {
+    if (e.target.classList.contains('item')) {
+      e.target.classList.remove('dragging');
+    }
+  });
+
+  document.addEventListener('dragover', function(e) {
+    if (e.target.classList.contains('card-jogador')) {
+      e.preventDefault();
+      e.target.classList.add('highlight-drop');
+    }
+  });
+
+  document.addEventListener('dragleave', function(e) {
+    if (e.target.classList.contains('card-jogador')) {
+      e.target.classList.remove('highlight-drop');
+    }
+  });
+
+  document.addEventListener('drop', function(e) {
+    if (e.target.classList.contains('card-jogador') && draggedItem) {
+      e.preventDefault();
+      e.target.classList.remove('highlight-drop');
+      
+      const jogadorIndex = e.target.closest('.card-jogador').dataset.index;
+      const itemIndex = draggedItem.dataset.index;
+      
+      adicionarItem(jogadorIndex, itemIndex);
+    }
+  });
+}
+
+// Funções para gerenciar jogadores
+function mostrarModalJogador() {
+  document.getElementById('modal-jogador').style.display = 'flex';
+}
+
+function adicionarJogador() {
+  const nome = document.getElementById('nome-jogador').value.trim();
+  const foto = document.querySelector('input[name="avatar"]:checked')?.value || 'avatar1.png';
+  
+  if (!nome) {
+    alert('Digite um nome para o jogador!');
+    return;
+  }
+  
+  if (jogadores.length >= MAX_JOGADORES) {
+    alert(`Limite de ${MAX_JOGADORES} jogadores atingido!`);
+    return;
+  }
+  
+  jogadores.push({
+    nome,
+    foto,
+    itens: [],
+    total: 0
+  });
+  
+  document.getElementById('modal-jogador').style.display = 'none';
+  document.getElementById('nome-jogador').value = '';
+  atualizarTela();
+}
+
+function removerJogador(index) {
+  if (confirm(`Remover ${jogadores[index].nome}?`)) {
     jogadores.splice(index, 1);
     atualizarTela();
   }
-};
+}
 
-const gerenciarItens = {
-  adicionar: (jogadorIndex, itemIndex) => {
-    const item = itensLoja[itemIndex];
-    const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
-    const totalAtual = jogadores.reduce((total, j) => total + j.total, 0);
-
-    if (totalAtual + item.preco > creditos) return alert(`Saldo insuficiente!`);
-    
-    jogadores[jogadorIndex].itens.push({...item});
-    jogadores[jogadorIndex].total += item.preco;
-    atualizarTela();
-  },
-
-  adicionarTodos: (itemIndex) => {
-    const item = itensLoja[itemIndex];
-    const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
-    const totalAtual = jogadores.reduce((total, j) => total + j.total, 0);
-
-    if (totalAtual + (item.preco * jogadores.length) > creditos) return alert("Saldo insuficiente!");
-    
-    jogadores.forEach(jogador => {
-      jogador.itens.push({...item});
-      jogador.total += item.preco;
-    });
-    atualizarTela();
-  },
-
-  remover: (jogadorIndex, itemIndex) => {
-    const item = jogadores[jogadorIndex].itens[itemIndex];
-    jogadores[jogadorIndex].total -= item.preco;
-    jogadores[jogadorIndex].itens.splice(itemIndex, 1);
-    atualizarTela();
+// Funções para gerenciar itens
+function adicionarItem(jogadorIndex, itemIndex) {
+  const item = itensLoja[itemIndex];
+  const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
+  
+  if (jogadores[jogadorIndex].total + item.preco > creditos) {
+    alert('Saldo insuficiente para este jogador!');
+    return;
   }
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('creditosInput').addEventListener('input', filtrarItens);
   
-  document.getElementById('adicionar-jogador').addEventListener('click', () => {
-    document.getElementById('modal-jogador').style.display = 'flex';
-  });
-  
-  document.getElementById('confirmar-jogador').addEventListener('click', () => {
-    const nome = document.getElementById('nome-jogador').value.trim();
-    const foto = document.getElementById('foto-jogador').value;
-    if (!nome || !foto) return alert('Preencha todos os campos!');
-    gerenciarJogadores.adicionar(nome, foto);
-  });
-  
+  jogadores[jogadorIndex].itens.push({...item});
+  jogadores[jogadorIndex].total += item.preco;
   atualizarTela();
-});
+}
 
-window.toggleFiltro = (categoria) => {
-  filtroAtivo = categoria;
-  filtrarItens();
-};
+function removerItem(jogadorIndex, itemIndex) {
+  const item = jogadores[jogadorIndex].itens[itemIndex];
+  jogadores[jogadorIndex].total -= item.preco;
+  jogadores[jogadorIndex].itens.splice(itemIndex, 1);
+  atualizarTela();
+}
 
-window.selecionarAvatar = (avatar) => {
-  document.getElementById('foto-jogador').value = avatar;
-};
-
-document.getElementById('resetar-loja').addEventListener('click', () => {
+// Funções auxiliares
+function calcularResumoFinanceiro() {
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
-  document.getElementById("creditosInput").value = "";
-  filtrarItens();
-});
-
-window.adicionarItem = gerenciarItens.adicionar;
-window.adicionarItemAoTodos = gerenciarItens.adicionarTodos;
-window.removerItem = gerenciarItens.remover;
-window.removerJogador = gerenciarJogadores.remover;
-
-function atualizarResumoFinanceiro() {
-  const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
-  const totalGasto = jogadores.reduce((total, jogador) => total + jogador.total, 0);
+  const totalGasto = jogadores.reduce((total, j) => total + j.total, 0);
   const saldoRestante = creditos - totalGasto;
 
   document.getElementById("total-gasto").textContent = `$${totalGasto.toLocaleString()}`;
   document.getElementById("saldo-restante").textContent = `$${saldoRestante.toLocaleString()}`;
 }
 
-function iniciarEdicao(itemIndex) {
-    const edicaoContainer = document.getElementById(`edicao-${itemIndex}`);
-    edicaoContainer.style.display = 'inline-block';
+function resetarLoja() {
+  if (!confirm('Resetar toda a loja? Isso removerá todos os itens dos jogadores.')) return;
+  
+  document.getElementById("creditosInput").value = "";
+  jogadores.forEach(jogador => {
+    jogador.itens = [];
+    jogador.total = 0;
+  });
+  atualizarTela();
 }
 
-function salvarPreco(itemIndex) {
-    const novoPreco = parseInt(document.getElementById(`input-${itemIndex}`).value);
-    if (isNaN(novoPreco) || novoPreco < 0) {
-        alert('Por favor, insira um valor válido!');
-        return;
-    }
-    
-    itensLoja[itemIndex].preco = novoPreco;
-    cancelarEdicao(itemIndex);
-    atualizarTela();
-}
+// Funções globais para uso no HTML
+window.toggleFiltro = function(categoria) {
+  filtroAtivo = categoria;
+  atualizarTela();
+};
 
-function cancelarEdicao(itemIndex) {
-    const edicaoContainer = document.getElementById(`edicao-${itemIndex}`);
-    edicaoContainer.style.display = 'none';
-}
+window.selecionarAvatar = function(avatar) {
+  document.querySelector(`input[value="${avatar}"]`).checked = true;
+};
