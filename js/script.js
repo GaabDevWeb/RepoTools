@@ -40,13 +40,11 @@ let itensLoja = [
   { nome: "Mina de Ondas de Choque", preco: 3000, categoria: "arremessaveis" }
 ];
 
-// Variáveis globais
 const MAX_JOGADORES = 6;
 let jogadores = [];
 let filtroAtivo = "todos";
 let draggedItem = null;
 
-// Inicialização quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
   // Configurar eventos
   document.getElementById('creditosInput').addEventListener('input', function() {
@@ -58,26 +56,21 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('confirmar-jogador').addEventListener('click', adicionarJogador);
   document.getElementById('resetar-loja').addEventListener('click', resetarLoja);
   
-  // Configurar drag and drop
   configurarDragAndDrop();
   
-  // Atualizar a tela inicial
   atualizarTela();
 });
 
-// Função principal para atualizar toda a interface
 function atualizarTela() {
   filtrarItens();
   atualizarListaJogadores();
   calcularResumoFinanceiro();
 }
 
-// Filtra os itens da loja baseado no crédito e categoria
 function filtrarItens() {
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
   const lojaDiv = document.getElementById("loja");
   
-  // Filtra e mapeia mantendo o índice original
   const itensFiltrados = itensLoja
     .map((item, indexOriginal) => ({ ...item, indexOriginal }))
     .filter(item => item.preco <= creditos && (filtroAtivo === "todos" || item.categoria === filtroAtivo));
@@ -91,7 +84,6 @@ function filtrarItens() {
     .join('');
 }
 
-// Atualiza a lista de jogadores na tela
 function atualizarListaJogadores() {
   const container = document.getElementById('lista-jogadores');
   container.innerHTML = jogadores.map((jogador, index) => `
@@ -112,7 +104,6 @@ function atualizarListaJogadores() {
   `).join('');
 }
 
-// Configura o sistema de drag and drop
 function configurarDragAndDrop() {
   document.addEventListener('dragstart', function(e) {
     if (e.target.classList.contains('item')) {
@@ -153,7 +144,6 @@ function configurarDragAndDrop() {
   });
 }
 
-// Funções para gerenciar jogadores
 function mostrarModalJogador() {
   document.getElementById('modal-jogador').style.display = 'flex';
 }
@@ -191,7 +181,6 @@ function removerJogador(index) {
   }
 }
 
-// Funções para gerenciar itens
 function adicionarItem(jogadorIndex, itemIndex) {
   const item = itensLoja[itemIndex];
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
@@ -213,7 +202,6 @@ function removerItem(jogadorIndex, itemIndex) {
   atualizarTela();
 }
 
-// Funções auxiliares
 function calcularResumoFinanceiro() {
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
   const totalGasto = jogadores.reduce((total, j) => total + j.total, 0);
@@ -234,7 +222,6 @@ function resetarLoja() {
   atualizarTela();
 }
 
-// Funções globais para uso no HTML
 window.toggleFiltro = function(categoria) {
   // 1. Remove a classe 'ativo' de TODOS os botões
   const botoesFiltro = document.querySelectorAll('.filtro-btn');
@@ -242,7 +229,6 @@ window.toggleFiltro = function(categoria) {
     btn.classList.remove('ativo');
   });
 
-  // 2. Adiciona 'ativo' APENAS no botão clicado (usando atributo onclick)
   const botaoClicado = Array.from(botoesFiltro).find(btn => 
     btn.getAttribute('onclick').includes(`'${categoria}'`)
   );
@@ -251,7 +237,6 @@ window.toggleFiltro = function(categoria) {
     botaoClicado.classList.add('ativo');
   }
 
-  // 3. Atualiza o filtro global e a interface
   filtroAtivo = categoria;
   atualizarTela();
 };
