@@ -236,6 +236,22 @@ function resetarLoja() {
 
 // Funções globais para uso no HTML
 window.toggleFiltro = function(categoria) {
+  // 1. Remove a classe 'ativo' de TODOS os botões
+  const botoesFiltro = document.querySelectorAll('.filtro-btn');
+  botoesFiltro.forEach(btn => {
+    btn.classList.remove('ativo');
+  });
+
+  // 2. Adiciona 'ativo' APENAS no botão clicado (usando atributo onclick)
+  const botaoClicado = Array.from(botoesFiltro).find(btn => 
+    btn.getAttribute('onclick').includes(`'${categoria}'`)
+  );
+  
+  if (botaoClicado) {
+    botaoClicado.classList.add('ativo');
+  }
+
+  // 3. Atualiza o filtro global e a interface
   filtroAtivo = categoria;
   atualizarTela();
 };
