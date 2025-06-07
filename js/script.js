@@ -25,7 +25,7 @@ let itensLoja = [
   { nome: "Rastreador Valioso", preco: 15000, categoria: "ferramentas" },
   { nome: "Rastreador de Extração", preco: 6000, categoria: "ferramentas" },
   { nome: "Carrinho de Bolso", preco: 17000, categoria: "ferramentas" },
-  { nome: "CARRINHO", preco: 42000, categoria: "ferramentas" },
+  { nome: "Carrinho", preco: 42000, categoria: "ferramentas" },
   { nome: "Cristal de Energia", preco: 8000, categoria: "ferramentas" },
   
   { nome: "Granada de Choque", preco: 3000, categoria: "arremessaveis" },
@@ -78,10 +78,21 @@ function filtrarItens() {
   lojaDiv.innerHTML = itensFiltrados
     .map((item) => `
       <div class="item" draggable="true" data-index="${item.indexOriginal}">
-        <strong>${item.nome}</strong> - $${item.preco.toLocaleString()}
+        <strong>${item.nome}</strong>
+        <input type="number" min="0" value="${item.preco}" style="width:80px" id="preco-item-${item.indexOriginal}"
+          oninput="atualizarPrecoItem(${item.indexOriginal})">
       </div>
     `)
     .join('');
+
+  // --- CONTROLE DA BARRA DE SCROLL ---
+  const alturaLimite = 300; // Defina a altura máxima desejada (em pixels)
+  
+  if (lojaDiv.scrollHeight > alturaLimite) {
+    lojaDiv.style.overflowY = 'auto'; // Ativa o scroll
+  } else {
+    lojaDiv.style.overflowY = 'hidden'; // Desativa o scroll
+  }
 }
 
 function atualizarListaJogadores() {
@@ -89,7 +100,7 @@ function atualizarListaJogadores() {
   container.innerHTML = jogadores.map((jogador, index) => `
     <div class="card-jogador" data-index="${index}">
       <img src="images/avatars/${jogador.foto}" alt="${jogador.nome}" width="50">
-      <h3>${jogador.nome}</h3>
+      <input type="text" value="${jogador.nome}" onblur="atualizarNomeJogador(${index}, this.value)" />
       <div class="itens-jogador">
         ${jogador.itens.map((item, itemIndex) => `
           <div class="item-jogador">
@@ -102,6 +113,13 @@ function atualizarListaJogadores() {
       <button onclick="removerJogador(${index})">Remover</button>
     </div>
   `).join('');
+}
+
+function atualizarNomeJogador(index, novoNome) {
+  if (novoNome.trim()) {
+    jogadores[index].nome = novoNome.trim();
+    atualizarTela();
+  }
 }
 
 function configurarDragAndDrop() {
@@ -243,4 +261,20 @@ window.toggleFiltro = function(categoria) {
 
 window.selecionarAvatar = function(avatar) {
   document.querySelector(`input[value="${avatar}"]`).checked = true;
+};
+
+
+window.atualizarPrecoItem = function(index) {
+  const input = document.getElementById(`preco-item-${index}`);
+  if (input.value === "") {
+    // Permite o campo ficar vazio enquanto o usuário digita/apaga
+    return;
+  }
+  let novoPreco = parseInt(input.value);
+  if (isNaN(novoPreco) || novoPreco < 0) {
+    input.value = itensLoja[index].preco;
+    return;
+  }
+  itensLoja[index].preco = novoPreco;
+  // Não chama atualizarTela aqui!
 };
