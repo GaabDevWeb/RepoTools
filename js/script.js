@@ -462,6 +462,10 @@ function handleAvatarUpload(event) {
 
 function adicionarJogador() {
     const nome = document.getElementById('nome-jogador').value.trim();
+    if (nome.length < 3) {
+        alert('Nome deve ter pelo menos 3 caracteres');
+        return;
+    }
     let foto = document.querySelector('input[name="avatar"]:checked')?.value || 
                document.getElementById('foto-jogador').value || 
                'avatar1.png';
@@ -472,6 +476,11 @@ function adicionarJogador() {
     } else {
       document.getElementById('foto-jogador').value = '';
     }
+    
+    // Resetar o botão de upload
+    const uploadButton = document.querySelector('.avatar-option label[for="upload-avatar"]');
+    uploadButton.style.backgroundImage = '';
+    uploadButton.style.color = 'var(--accent)';
     
     // Restante da função permanece igual
     if (!nome) {
