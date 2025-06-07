@@ -260,6 +260,14 @@ input:focus {
   transition: ease-in-out 0.5s !important;
 }
 
+.card-jogador button {
+  border: none;
+}
+
+.card-jogador button:hover {
+  background: transparent;
+}
+
 .item {
   display: flex;
   align-items: center;

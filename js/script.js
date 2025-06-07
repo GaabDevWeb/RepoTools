@@ -297,6 +297,8 @@ let itensLoja = [
     descricao: "Arma beta que causa efeito elétrico (dano/controle não especificado)."
   }
 ];
+
+
 const MAX_JOGADORES = 6;
 let jogadores = [];
 let filtroAtivo = "todos";
@@ -365,7 +367,7 @@ function atualizarListaJogadores() {
         ${jogador.itens.map((item, itemIndex) => `
           <div class="item-jogador">
             ${item.nome} - $${item.preco.toLocaleString()}
-            <button onclick="removerItem(${index}, ${itemIndex})">❌</button>
+            <button onclick="removerItem(${index}, ${itemIndex})"><i class="fa-solid fa-trash"></i></button>
           </div>
         `).join('')}
       </div>
