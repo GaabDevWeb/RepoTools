@@ -124,7 +124,7 @@ button:hover {
 }
 
 .total-gasto, .saldo-restante {
-  padding: 8px;
+  padding: 10px;
   border: 1px solid var(--border);
 }
 
@@ -259,14 +259,15 @@ input:focus {
   border-color: #0d0d0d00;
   transition: ease-in-out 0.5s !important;
 }
-
-.card-jogador button {
+#removerItem {
   border: none;
 }
 
-.card-jogador button:hover {
+#removerItem:hover {
   background: transparent;
 }
+
+
 
 .item {
   display: flex;
@@ -299,3 +300,4 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+

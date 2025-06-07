@@ -367,12 +367,12 @@ function atualizarListaJogadores() {
         ${jogador.itens.map((item, itemIndex) => `
           <div class="item-jogador">
             ${item.nome} - $${item.preco.toLocaleString()}
-            <button onclick="removerItem(${index}, ${itemIndex})"><i class="fa-solid fa-trash"></i></button>
+            <button id="removerItem" onclick="removerItem(${index}, ${itemIndex})"><i class="fa-solid fa-trash"></i></button>
           </div>
         `).join('')}
       </div>
-      <p>Total: $${jogador.total.toLocaleString()}</p>
-      <button onclick="removerJogador(${index})">Remover</button>
+      <p><i class="fa-solid fa-coins"></i> Total: $${jogador.total.toLocaleString()}</p>
+      <button onclick="removerJogador(${index})"><i class="fa-solid fa-user-minus"></i> Remover</button>
     </div>
   `).join('');
 }

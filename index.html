@@ -16,34 +16,34 @@
 
         <div class="controles">
             <div class="creditos-container">
-                <label for="creditosInput">Total:</label>
+                <label for="creditosInput"><i class="fa-solid fa-wallet"></i> Total:</label>
                 <input type="number" id="creditosInput" value="0" min="0">
-                <button id="resetar-loja">Resetar</button>
+                <button id="resetar-loja"><i class="fa-solid fa-rotate-left"></i> Resetar</button>
             </div>
 
             <div class="filtros">
-                <button class="filtro-btn ativo" onclick="toggleFiltro('todos')">Todos</button>
-                <button class="filtro-btn" onclick="toggleFiltro('armas')">Armas</button>
-                <button class="filtro-btn" onclick="toggleFiltro('upgrades')">Upgrades</button>
-                <button class="filtro-btn" onclick="toggleFiltro('cura')">Cura</button>
-                <button class="filtro-btn" onclick="toggleFiltro('ferramentas')">Ferramentas</button>
-                <button class="filtro-btn" onclick="toggleFiltro('arremessaveis')">Arremessáveis</button>
+                <button class="filtro-btn ativo" onclick="toggleFiltro('todos')"><i class="fa-solid fa-list"></i> Todos</button>
+                <button class="filtro-btn" onclick="toggleFiltro('armas')"><i class="fa-solid fa-gun"></i> Armas</button>
+                <button class="filtro-btn" onclick="toggleFiltro('upgrades')"><i class="fa-solid fa-arrow-up"></i> Upgrades</button>
+                <button class="filtro-btn" onclick="toggleFiltro('cura')"><i class="fa-solid fa-heart"></i> Cura</button>
+                <button class="filtro-btn" onclick="toggleFiltro('ferramentas')"><i class="fa-solid fa-screwdriver-wrench"></i> Ferramentas</button>
+                <button class="filtro-btn" onclick="toggleFiltro('arremessaveis')"><i class="fa-solid fa-bomb"></i> Arremessáveis</button>
             </div>
         </div>
 
         <div id="loja" class="itens-loja"></div>
 
-        <h2>Jogadores</h2>
-        <button id="adicionar-jogador">Adicionar Jogador</button>
+        <h2><i class="fa-solid fa-users"></i> Jogadores</h2>
+        <button id="adicionar-jogador"><i class="fa-solid fa-user-plus"></i> Adicionar Jogador</button>
         <div id="lista-jogadores" class="lista-jogadores"></div>
 
         <div class="resumo-financeiro">
             <div class="total-gasto">
-                <span>Total Gasto:</span>
+                <span><i class="fa-solid fa-money-bill-wave"></i> Total Gasto:</span>
                 <span id="total-gasto">$0</span>
             </div>
             <div class="saldo-restante">
-                <span>Saldo Restante:</span>
+                <span><i class="fa-solid fa-piggy-bank"></i> Saldo Restante:</span>
                 <span id="saldo-restante">$0</span>
             </div>
         </div>
@@ -85,8 +85,8 @@
             <input type="hidden" id="foto-jogador" value="">
 
             <div class="modal-botoes">
-                <button id="confirmar-jogador">Confirmar</button>
-                <button onclick="document.getElementById('modal-jogador').style.display='none'">Cancelar</button>
+                <button id="confirmar-jogador"><i class="fa-solid fa-check"></i> Confirmar</button>
+                <button onclick="document.getElementById('modal-jogador').style.display='none'"><i class="fa-solid fa-xmark"></i> Cancelar</button>
             </div>
         </div>
     </div>
