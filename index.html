@@ -81,6 +81,13 @@
                     <img src="images/avatars/avatar6.png" alt="Avatar 6">
                     <input type="radio" name="avatar" value="avatar6.png" id="avatar6">
                 </div>
+                <div class="avatar-option">
+                    <label for="upload-avatar" style="cursor:pointer">
+                        <i class="fa-solid fa-upload"></i> Upload
+                        <input type="file" id="upload-avatar" accept="image/*" style="display:none" 
+                               onchange="handleAvatarUpload(event)">
+                    </label>
+                </div>
             </div>
             <input type="hidden" id="foto-jogador" value="">
 

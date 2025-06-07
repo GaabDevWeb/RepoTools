@@ -337,6 +337,9 @@ function filtrarItens() {
   lojaDiv.innerHTML = itensFiltrados
     .map((item) => `
       <div class="item" draggable="true" data-index="${item.indexOriginal}" title="${item.descricao}">
+        <div class="item-categoria">
+          <i class="fa-solid ${getIconeCategoria(item.categoria)}"></i>
+        </div>
         <img src="images/itens/${item.imagem}" alt="${item.nome}" class="item-img">
         <div class="item-info">
           <strong>${item.nome}</strong>
@@ -347,7 +350,6 @@ function filtrarItens() {
     `)
     .join('');
 
-  
   const alturaLimite = 300; 
   
   if (lojaDiv.scrollHeight > alturaLimite) {
@@ -361,7 +363,10 @@ function atualizarListaJogadores() {
   const container = document.getElementById('lista-jogadores');
   container.innerHTML = jogadores.map((jogador, index) => `
     <div class="card-jogador" data-index="${index}">
-      <img src="images/avatars/${jogador.foto}" alt="${jogador.nome}" width="50">
+      <img src="${jogador.foto.startsWith('data:') || jogador.foto.startsWith('blob:') ? 
+           jogador.foto : 
+           'images/avatars/' + jogador.foto}" 
+           alt="${jogador.nome}" width="50">
       <input type="text" value="${jogador.nome}" onblur="atualizarNomeJogador(${index}, this.value)" />
       <div class="itens-jogador">
         ${jogador.itens.map((item, itemIndex) => `
@@ -431,30 +436,64 @@ function mostrarModalJogador() {
   document.getElementById('modal-jogador').style.display = 'flex';
 }
 
+function handleAvatarUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        // Desmarca qualquer avatar selecionado
+        document.querySelectorAll('input[name="avatar"]').forEach(radio => {
+            radio.checked = false;
+        });
+        
+        // Armazena a URL da imagem no campo hidden
+        document.getElementById('foto-jogador').value = e.target.result;
+        
+        // Atualiza o fundo do botão de upload
+        const uploadButton = document.querySelector('.avatar-option label[for="upload-avatar"]');
+        uploadButton.style.backgroundImage = `url(${e.target.result})`;
+        uploadButton.style.backgroundSize = 'cover';
+        uploadButton.style.backgroundPosition = 'center';
+        uploadButton.style.color = 'transparent';
+    };
+    reader.readAsDataURL(file);
+}
+
 function adicionarJogador() {
-  const nome = document.getElementById('nome-jogador').value.trim();
-  const foto = document.querySelector('input[name="avatar"]:checked')?.value || 'avatar1.png';
-  
-  if (!nome) {
-    alert('Digite um nome para o jogador!');
-    return;
-  }
-  
-  if (jogadores.length >= MAX_JOGADORES) {
-    alert(`Limite de ${MAX_JOGADORES} jogadores atingido!`);
-    return;
-  }
-  
-  jogadores.push({
-    nome,
-    foto,
-    itens: [],
-    total: 0
-  });
-  
-  document.getElementById('modal-jogador').style.display = 'none';
-  document.getElementById('nome-jogador').value = '';
-  atualizarTela();
+    const nome = document.getElementById('nome-jogador').value.trim();
+    let foto = document.querySelector('input[name="avatar"]:checked')?.value || 
+               document.getElementById('foto-jogador').value || 
+               'avatar1.png';
+    
+    // Limpa o campo de upload após salvar
+    if (foto.startsWith('data:')) {
+      document.getElementById('upload-avatar').value = '';
+    } else {
+      document.getElementById('foto-jogador').value = '';
+    }
+    
+    // Restante da função permanece igual
+    if (!nome) {
+      alert('Digite um nome para o jogador!');
+      return;
+    }
+    
+    if (jogadores.length >= MAX_JOGADORES) {
+      alert(`Limite de ${MAX_JOGADORES} jogadores atingido!`);
+      return;
+    }
+    
+    jogadores.push({
+      nome,
+      foto,
+      itens: [],
+      total: 0
+    });
+    
+    document.getElementById('modal-jogador').style.display = 'none';
+    document.getElementById('nome-jogador').value = '';
+    atualizarTela();
 }
 
 function removerJogador(index) {
@@ -548,3 +587,14 @@ window.atualizarPrecoItem = function(index) {
   
   itensLoja[index].preco = novoPreco;
 };
+
+function getIconeCategoria(categoria) {
+  const icones = {
+    'armas': 'fa-gun',
+    'upgrades': 'fa-arrow-up',
+    'cura': 'fa-heart',
+    'ferramentas': 'fa-screwdriver-wrench',
+    'arremessaveis': 'fa-bomb'
+  };
+  return icones[categoria] || 'fa-list';
+}
