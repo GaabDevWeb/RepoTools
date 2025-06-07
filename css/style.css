@@ -278,9 +278,3 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
-/* Remove as setas no Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-  

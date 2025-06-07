@@ -266,15 +266,20 @@ window.selecionarAvatar = function(avatar) {
 
 window.atualizarPrecoItem = function(index) {
   const input = document.getElementById(`preco-item-${index}`);
+  
+  // Verificação mais rigorosa que remove qualquer caractere não numérico
+  input.value = input.value.replace(/[^0-9]/g, '');
+  
   if (input.value === "") {
-    // Permite o campo ficar vazio enquanto o usuário digita/apaga
+    input.value = itensLoja[index].preco;
     return;
   }
+  
   let novoPreco = parseInt(input.value);
   if (isNaN(novoPreco) || novoPreco < 0) {
     input.value = itensLoja[index].preco;
     return;
   }
+  
   itensLoja[index].preco = novoPreco;
-  // Não chama atualizarTela aqui!
 };
