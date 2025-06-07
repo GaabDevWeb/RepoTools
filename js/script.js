@@ -366,8 +366,11 @@ function atualizarListaJogadores() {
       <div class="itens-jogador">
         ${jogador.itens.map((item, itemIndex) => `
           <div class="item-jogador">
-            ${item.nome} - $${item.preco.toLocaleString()}
-            <button id="removerItem" onclick="removerItem(${index}, ${itemIndex})"><i class="fa-solid fa-trash"></i></button>
+            <div>${item.nome}</div>
+            <div>
+              $${item.preco.toLocaleString()}
+              <button onclick="removerItem(${index}, ${itemIndex})"><i class="fa-solid fa-trash"></i></button>
+            </div>
           </div>
         `).join('')}
       </div>
