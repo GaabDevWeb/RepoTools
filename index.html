@@ -32,7 +32,12 @@
                 <button class="filtro-btn" onclick="toggleFiltro('preco-asc')"><i class="fa-solid fa-arrow-down-1-9"></i> Mais Barato</button>
                 <button class="filtro-btn" onclick="toggleFiltro('preco-desc')"><i class="fa-solid fa-arrow-up-9-1"></i> Mais Caro</button>
             </div>
-            <input type="text" id="pesquisa-loja" placeholder="Pesquisar itens..." style="margin-top:8px;width:100%;max-width:300px;">
+            <div style="position:relative;max-width:300px;width:100%;margin-top:8px;">
+                <input type="text" id="pesquisa-loja" placeholder="Pesquisar itens..." style="padding-left:28px;width:100%;">
+                <span style="position:absolute;left:8px;top: 40%;transform:translateY(-50%);color:#888;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+            </div>
         </div>
 
         <div id="loja" class="itens-loja"></div>
@@ -42,13 +47,18 @@
         <div id="lista-jogadores" class="lista-jogadores"></div>
 
         <div class="resumo-financeiro">
-            <div class="total-gasto">
-                <span><i class="fa-solid fa-money-bill-wave"></i> Total Gasto:</span>
-                <span id="total-gasto">$0</span>
+            <div class="resumo-valores">
+                <div class="total-gasto">
+                    <span class="resumo-label"><i class="fa-solid fa-money-bill-wave"></i> Total Gasto:</span>
+                    <span id="total-gasto" class="resumo-valor">$0</span>
+                </div>
+                <div class="saldo-restante">
+                    <span class="resumo-label"><i class="fa-solid fa-piggy-bank"></i> Saldo Restante:</span>
+                    <span id="saldo-restante" class="resumo-valor">$0</span>
+                </div>
             </div>
-            <div class="saldo-restante">
-                <span><i class="fa-solid fa-piggy-bank"></i> Saldo Restante:</span>
-                <span id="saldo-restante">$0</span>
+            <div class="progresso-barra">
+                <div id="progresso-preenchido"></div>
             </div>
         </div>
     </div>

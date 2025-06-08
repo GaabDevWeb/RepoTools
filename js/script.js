@@ -581,6 +581,16 @@ function calcularResumoFinanceiro() {
 
   document.getElementById("total-gasto").textContent = `$${totalGasto.toLocaleString()}`;
   document.getElementById("saldo-restante").textContent = `$${saldoRestante.toLocaleString()}`;
+
+  // Atualiza barra de progresso (sem porcentagem)
+  const barra = document.getElementById("progresso-preenchido");
+  let porcentagem = 0;
+  if (creditos > 0) {
+    porcentagem = Math.min(100, Math.round((totalGasto / creditos) * 100));
+  }
+  if (barra) {
+    barra.style.width = porcentagem + "%";
+  }
 }
 
 function resetarLoja() {
