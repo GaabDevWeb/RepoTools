@@ -315,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('adicionar-jogador').addEventListener('click', mostrarModalJogador);
   document.getElementById('confirmar-jogador').addEventListener('click', adicionarJogador);
   document.getElementById('resetar-loja').addEventListener('click', resetarLoja);
+  document.getElementById('pesquisa-loja').addEventListener('input', atualizarTela);
   
   configurarDragAndDrop();
   
@@ -334,6 +335,7 @@ function atualizarTela() {
 function filtrarItens() {
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
   const lojaDiv = document.getElementById("loja");
+  const termoPesquisa = (document.getElementById("pesquisa-loja")?.value || "").toLowerCase().trim();
 
   let itensFiltrados = itensLoja
     .map((item, indexOriginal) => ({ ...item, indexOriginal }))
@@ -341,6 +343,17 @@ function filtrarItens() {
 
   if (!filtrosAtivos.includes("todos")) {
     itensFiltrados = itensFiltrados.filter(item => filtrosAtivos.includes(item.categoria));
+  }
+
+  if (termoPesquisa) {
+    // Se o termo for um número, filtra por preço exato ou parcial
+    const termoNumero = parseInt(termoPesquisa.replace(/\D/g, ''));
+    itensFiltrados = itensFiltrados.filter(item => {
+      const nomeMatch = item.nome.toLowerCase().includes(termoPesquisa);
+      const descMatch = item.descricao && item.descricao.toLowerCase().includes(termoPesquisa);
+      const precoMatch = !isNaN(termoNumero) && item.preco.toString().includes(termoNumero.toString());
+      return nomeMatch || descMatch || precoMatch;
+    });
   }
 
   lojaDiv.innerHTML = itensFiltrados
