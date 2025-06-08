@@ -341,14 +341,21 @@ function filtrarItens() {
     .map((item, indexOriginal) => ({ ...item, indexOriginal }))
     .filter(item => item.preco <= creditos);
 
-  if (filtrosAtivos.includes("favoritos")) {
-    itensFiltrados = itensFiltrados.filter(item => item.favorito);
-  } else if (!filtrosAtivos.includes("todos")) {
-    itensFiltrados = itensFiltrados.filter(item => filtrosAtivos.includes(item.categoria));
+  // Filtros de categoria e favoritos
+  if (!filtrosAtivos.includes("todos")) {
+    if (filtrosAtivos.includes("favoritos")) {
+      itensFiltrados = itensFiltrados.filter(item => item.favorito);
+    }
+    // Filtra por categoria se houver alguma (exceto favoritos e ordenação)
+    const categorias = filtrosAtivos.filter(f => 
+      !["favoritos", "preco-asc", "preco-desc"].includes(f)
+    );
+    if (categorias.length > 0) {
+      itensFiltrados = itensFiltrados.filter(item => categorias.includes(item.categoria));
+    }
   }
 
   if (termoPesquisa) {
-    // Se o termo for um número, filtra por preço exato ou parcial
     const termoNumero = parseInt(termoPesquisa.replace(/\D/g, ''));
     itensFiltrados = itensFiltrados.filter(item => {
       const nomeMatch = item.nome.toLowerCase().includes(termoPesquisa);
@@ -358,7 +365,14 @@ function filtrarItens() {
     });
   }
 
-  itensFiltrados.sort((a, b) => (b.favorito ? 1 : 0) - (a.favorito ? 1 : 0));
+  // Ordenação por preço
+  if (filtrosAtivos.includes("preco-asc")) {
+    itensFiltrados.sort((a, b) => a.preco - b.preco);
+  } else if (filtrosAtivos.includes("preco-desc")) {
+    itensFiltrados.sort((a, b) => b.preco - a.preco);
+  } else {
+    itensFiltrados.sort((a, b) => (b.favorito ? 1 : 0) - (a.favorito ? 1 : 0));
+  }
 
   lojaDiv.innerHTML = itensFiltrados
   .map((item) => `
@@ -582,14 +596,36 @@ function resetarLoja() {
 
 window.toggleFiltro = function(categoria) {
   if (categoria === "todos" || categoria === "favoritos") {
-    filtrosAtivos = [categoria];
-  } else {
-    if (filtrosAtivos.includes("todos") || filtrosAtivos.includes("favoritos")) {
-      filtrosAtivos = [];
-    }
+    // Permite combinar "todos" ou "favoritos" apenas com ordenação de preço
+    filtrosAtivos = [categoria, ...filtrosAtivos.filter(f => f === "preco-asc" || f === "preco-desc")];
+  } else if (categoria === "preco-asc" || categoria === "preco-desc") {
+    // Só pode um filtro de ordenação por vez
     if (filtrosAtivos.includes(categoria)) {
       filtrosAtivos = filtrosAtivos.filter(f => f !== categoria);
-      if (filtrosAtivos.length === 0) filtrosAtivos = ["todos"];
+      // Se só sobrou "todos" ou "favoritos", mantém só ele
+      if (
+        filtrosAtivos.length === 0 ||
+        (filtrosAtivos.length === 1 && (filtrosAtivos[0] === "todos" || filtrosAtivos[0] === "favoritos"))
+      ) {
+        filtrosAtivos = [filtrosAtivos[0] || "todos"];
+      }
+    } else {
+      filtrosAtivos = filtrosAtivos.filter(f => f !== "preco-asc" && f !== "preco-desc");
+      filtrosAtivos.push(categoria);
+    }
+  } else {
+    // Remove "todos" e "favoritos" se outro filtro for selecionado
+    filtrosAtivos = filtrosAtivos.filter(f => f !== "todos" && f !== "favoritos");
+    if (filtrosAtivos.includes(categoria)) {
+      filtrosAtivos = filtrosAtivos.filter(f => f !== categoria);
+      // Se nenhum filtro ficar ativo, volta para "todos" (mantendo ordenação se houver)
+      if (
+        filtrosAtivos.length === 0 ||
+        (filtrosAtivos.length === 1 && (filtrosAtivos[0] === "preco-asc" || filtrosAtivos[0] === "preco-desc"))
+      ) {
+        const ordenacao = filtrosAtivos.find(f => f === "preco-asc" || f === "preco-desc");
+        filtrosAtivos = ordenacao ? ["todos", ordenacao] : ["todos"];
+      }
     } else {
       filtrosAtivos.push(categoria);
     }
