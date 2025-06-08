@@ -341,7 +341,9 @@ function filtrarItens() {
     .map((item, indexOriginal) => ({ ...item, indexOriginal }))
     .filter(item => item.preco <= creditos);
 
-  if (!filtrosAtivos.includes("todos")) {
+  if (filtrosAtivos.includes("favoritos")) {
+    itensFiltrados = itensFiltrados.filter(item => item.favorito);
+  } else if (!filtrosAtivos.includes("todos")) {
     itensFiltrados = itensFiltrados.filter(item => filtrosAtivos.includes(item.categoria));
   }
 
@@ -356,21 +358,26 @@ function filtrarItens() {
     });
   }
 
+  itensFiltrados.sort((a, b) => (b.favorito ? 1 : 0) - (a.favorito ? 1 : 0));
+
   lojaDiv.innerHTML = itensFiltrados
-    .map((item) => `
-      <div class="item" draggable="true" data-index="${item.indexOriginal}" title="${item.descricao}">
-        <div class="item-categoria">
-          <i class="fa-solid ${getIconeCategoria(item.categoria)}"></i>
-        </div>
-        <img src="images/itens/${item.imagem}" alt="${item.nome}" class="item-img">
-        <div class="item-info">
-          <strong>${item.nome}</strong>
-          <input type="number" min="0" value="${item.preco}" style="width:80px" id="preco-item-${item.indexOriginal}"
-            oninput="atualizarPrecoItem(${item.indexOriginal})">
-        </div>
+  .map((item) => `
+    <div class="item" draggable="true" data-index="${item.indexOriginal}" title="${item.descricao}">
+      <div class="item-categoria">
+        <i class="fa-solid ${getIconeCategoria(item.categoria)}"></i>
       </div>
-    `)
-    .join('');
+      <img src="images/itens/${item.imagem}" alt="${item.nome}" class="item-img">
+      <div class="item-info">
+        <strong>${item.nome}</strong>
+        <input type="number" min="0" value="${item.preco}" style="width:80px" id="preco-item-${item.indexOriginal}"
+          oninput="atualizarPrecoItem(${item.indexOriginal})">
+        <button class="btn-favorito" onclick="toggleFavorito(${item.indexOriginal})" title="Favoritar">
+          <i class="fa${item.favorito ? '-solid' : '-regular'} fa-star" style="color:${item.favorito ? '#FFD700' : '#888'}"></i>
+        </button>
+      </div>
+    </div>
+  `)
+  .join('');
 
   const alturaLimite = 300; 
 
@@ -637,3 +644,8 @@ function getIconeCategoria(categoria) {
   };
   return icones[categoria] || 'fa-list';
 }
+
+window.toggleFavorito = function(index) {
+  itensLoja[index].favorito = !itensLoja[index].favorito;
+  atualizarTela();
+};
