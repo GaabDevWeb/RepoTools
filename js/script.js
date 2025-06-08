@@ -324,6 +324,10 @@ function atualizarTela() {
   filtrarItens();
   atualizarListaJogadores();
   calcularResumoFinanceiro();
+
+  // Desabilita o botão se atingir o limite
+  const btnAdicionar = document.getElementById('adicionar-jogador');
+  btnAdicionar.disabled = jogadores.length >= MAX_JOGADORES;
 }
 
 function filtrarItens() {
@@ -461,11 +465,14 @@ function handleAvatarUpload(event) {
 }
 
 function adicionarJogador() {
-    const nome = document.getElementById('nome-jogador').value.trim();
-    if (nome.length < 3) {
-        alert('Nome deve ter pelo menos 3 caracteres');
-        return;
+    let nome = document.getElementById('nome-jogador').value.trim();
+    
+    if (!nome || nome.length < 3) {
+        // Gera nome aleatório se nenhum nome válido for fornecido
+        const nomesAleatorios = ['Jogador 1', 'Jogador 2', 'Jogador 3'];
+        nome = nomesAleatorios[Math.floor(Math.random() * nomesAleatorios.length)];
     }
+    
     let foto = document.querySelector('input[name="avatar"]:checked')?.value || 
                document.getElementById('foto-jogador').value || 
                'avatar1.png';
@@ -482,11 +489,6 @@ function adicionarJogador() {
     uploadButton.style.backgroundImage = '';
     uploadButton.style.color = 'var(--accent)';
     
-    // Restante da função permanece igual
-    if (!nome) {
-      alert('Digite um nome para o jogador!');
-      return;
-    }
     
     if (jogadores.length >= MAX_JOGADORES) {
       alert(`Limite de ${MAX_JOGADORES} jogadores atingido!`);
