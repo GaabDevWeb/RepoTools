@@ -376,7 +376,14 @@ button:disabled {
   
   input {
     border: none;
+    background: none;
   }
+}
+
+.card-jogador img {
+  width: 70px !important;
+  height: 70px !important;
+  object-fit: cover;
 }
 
 .card-jogador:focus-within {
@@ -447,16 +454,37 @@ span[style*="color:#888"], .btn-favorito:not(.favoritado) i {
   color: var(--text-secondary) !important;
 }
 
-/* Se quiser, pode criar uma variável para o overlay do modal */
-:root {
-  --modal-overlay: rgba(0, 0, 0, 0.815);
+/* Seletor de temas estilizado */
+#theme-selector {
+  appearance: none;
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  padding: 7px 10px 7px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
+  box-shadow: none;
+  min-width: 120px;
+  outline: none;
+    box-shadow: none;
+
 }
-.light-theme {
-  --modal-overlay: rgba(0, 0, 0, 0.4);
+
+
+#theme-selector option {
+  background: none;
+  color: var(--text);
+  border: none;
+  padding: 7px 12px;
+  cursor: pointer;
 }
-.modal {
-  background: var(--modal-overlay);
+
+#theme-selector:hover {
+  background: var(--surface);
+  color: var(--accent);
+  border-color: var(--accent);
 }
+
 
 body, .container, .modal, .item, .card-jogador {
   transition: background 0.5s, color 0.3s, border-color 0.3s;
