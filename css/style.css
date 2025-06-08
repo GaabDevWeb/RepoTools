@@ -55,13 +55,12 @@ input {
   margin-bottom: 8px;
 }
 
-input:hover {
+input:hover, input:focus {
   border-color: var(--accent);
 }
 
 input:focus {
   outline: none;
-  border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.3);
 }
 
@@ -80,6 +79,12 @@ button {
 button:hover {
   background: var(--border);
   transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--border);
 }
 
 .filtros {
@@ -113,7 +118,7 @@ button:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-top: 10px; /* Adiciona espaço no topo para o ícone */
+  padding-top: 10px;
 }
 
 .item:hover {
@@ -134,11 +139,33 @@ button:hover {
 
 .item-info {
   flex: 1;
-  padding-right: 30px; /* Garante que o texto não sobreponha o ícone */
+  padding-right: 30px;
 }
 
 .item-name, .item-price {
   margin: 4px 0;
+}
+
+.item-categoria {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+.item:hover .item-categoria {
+  opacity: 1;
+}
+
+.item-categoria i {
+  font-size: 14px;
 }
 
 .itens-loja, .lista-jogadores {
@@ -152,8 +179,7 @@ button:hover {
 #loja {
   border: 1px solid var(--border);
   margin: 16px 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
   max-height: 300px;
 }
 
@@ -223,6 +249,19 @@ button:hover {
   border: 1px solid var(--accent);
 }
 
+.avatar-option label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--accent);
+}
+
+.avatar-option label:hover {
+  color: var(--text);
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   transition: all 0.3s;
@@ -259,12 +298,14 @@ button:hover {
   color: var(--accent);
 }
 
-.card-jogador p {
-  margin: 10px 0 5px;
-}
-
-.card-jogador input {
-  border: none;
+.card-jogador {
+  p {
+    margin: 10px 0 5px;
+  }
+  
+  input {
+    border: none;
+  }
 }
 
 .card-jogador:focus-within {
@@ -273,10 +314,10 @@ button:hover {
 
 #removerItem {
   border: none;
-}
-
-#removerItem:hover {
-  background: transparent;
+  
+  &:hover {
+    background: transparent;
+  }
 }
 
 @keyframes pulse {
@@ -293,47 +334,4 @@ button:hover {
   .itens-loja, .lista-jogadores {
     grid-template-columns: 1fr;
   }
-}
-
-.item-categoria {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: none;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  opacity: 0; 
-  transition: opacity 0.4s ease, transform 0.3s ease;
-}
-
-.item:hover .item-categoria {
-  opacity: 1; 
-}
-
-.item-categoria i {
-  font-size: 14px;
-}
-
-.avatar-option label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: var(--accent);
-}
-
-.avatar-option label:hover {
-    color: var(--text);
-}
-
-#adicionar-jogador:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: var(--border);
 }
