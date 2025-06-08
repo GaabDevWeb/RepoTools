@@ -363,17 +363,17 @@ function filtrarItens() {
   lojaDiv.innerHTML = itensFiltrados
   .map((item) => `
     <div class="item" draggable="true" data-index="${item.indexOriginal}" title="${item.descricao}">
-      <div class="item-categoria">
-        <i class="fa-solid ${getIconeCategoria(item.categoria)}"></i>
-      </div>
+      <button class="btn-favorito" onclick="toggleFavorito(${item.indexOriginal})" title="Favoritar">
+        <i class="fa${item.favorito ? '-solid' : '-regular'} fa-star" style="color:${item.favorito ? '#FFD700' : '#888'}"></i>
+      </button>
       <img src="images/itens/${item.imagem}" alt="${item.nome}" class="item-img">
       <div class="item-info">
         <strong>${item.nome}</strong>
         <input type="number" min="0" value="${item.preco}" style="width:80px" id="preco-item-${item.indexOriginal}"
           oninput="atualizarPrecoItem(${item.indexOriginal})">
-        <button class="btn-favorito" onclick="toggleFavorito(${item.indexOriginal})" title="Favoritar">
-          <i class="fa${item.favorito ? '-solid' : '-regular'} fa-star" style="color:${item.favorito ? '#FFD700' : '#888'}"></i>
-        </button>
+      </div>
+      <div class="item-categoria">
+        <i class="fa-solid ${getIconeCategoria(item.categoria)}"></i>
       </div>
     </div>
   `)
@@ -581,10 +581,10 @@ function resetarLoja() {
 }
 
 window.toggleFiltro = function(categoria) {
-  if (categoria === "todos") {
-    filtrosAtivos = ["todos"];
+  if (categoria === "todos" || categoria === "favoritos") {
+    filtrosAtivos = [categoria];
   } else {
-    if (filtrosAtivos.includes("todos")) {
+    if (filtrosAtivos.includes("todos") || filtrosAtivos.includes("favoritos")) {
       filtrosAtivos = [];
     }
     if (filtrosAtivos.includes(categoria)) {
@@ -648,4 +648,14 @@ function getIconeCategoria(categoria) {
 window.toggleFavorito = function(index) {
   itensLoja[index].favorito = !itensLoja[index].favorito;
   atualizarTela();
+
+  // Após atualizar a tela, anima o botão favorito se estiver favoritado
+  setTimeout(() => {
+    const btn = document.querySelector(`.item[data-index="${index}"] .btn-favorito`);
+    if (btn && itensLoja[index].favorito) {
+      btn.classList.remove('favoritado'); // Remove para reiniciar animação
+      void btn.offsetWidth; // Força reflow
+      btn.classList.add('favoritado');
+    }
+  }, 0);
 };
