@@ -302,6 +302,7 @@ let itensLoja = [
 const MAX_JOGADORES = 6;
 let jogadores = [];
 let filtroAtivo = "todos";
+let filtrosAtivos = ["todos"];
 let draggedItem = null;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -333,11 +334,15 @@ function atualizarTela() {
 function filtrarItens() {
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
   const lojaDiv = document.getElementById("loja");
-  
-  const itensFiltrados = itensLoja
+
+  let itensFiltrados = itensLoja
     .map((item, indexOriginal) => ({ ...item, indexOriginal }))
-    .filter(item => item.preco <= creditos && (filtroAtivo === "todos" || item.categoria === filtroAtivo));
-  
+    .filter(item => item.preco <= creditos);
+
+  if (!filtrosAtivos.includes("todos")) {
+    itensFiltrados = itensFiltrados.filter(item => filtrosAtivos.includes(item.categoria));
+  }
+
   lojaDiv.innerHTML = itensFiltrados
     .map((item) => `
       <div class="item" draggable="true" data-index="${item.indexOriginal}" title="${item.descricao}">
@@ -355,7 +360,7 @@ function filtrarItens() {
     .join('');
 
   const alturaLimite = 300; 
-  
+
   if (lojaDiv.scrollHeight > alturaLimite) {
     lojaDiv.style.overflowY = 'auto'; 
   } else {
@@ -464,93 +469,47 @@ function handleAvatarUpload(event) {
     reader.readAsDataURL(file);
 }
 
-function nomeJaExiste(nome) {
-  return jogadores.some(j => j.nome.trim().toLowerCase() === nome.trim().toLowerCase());
-}
-
-function gerarNomeAleatorio() {
-  const nomesAleatorios = ['Jogador 1', 'Jogador 2', 'Jogador 3', 'Jogador 4', 'Jogador 5', 'Jogador 6'];
-  let nome;
-  let tentativas = 0;
-  do {
-    nome = nomesAleatorios[Math.floor(Math.random() * nomesAleatorios.length)];
-    tentativas++;
-  } while (nomeJaExiste(nome) && tentativas < nomesAleatorios.length * 2);
-  return nome;
-}
-
-function mostrarErroNome(mensagem) {
-  let erro = document.getElementById('erro-nome-jogador');
-  if (!erro) {
-    erro = document.createElement('div');
-    erro.id = 'erro-nome-jogador';
-    erro.style.color = 'var(--accent)';
-    erro.style.fontSize = '0.9em';
-    erro.style.margin = '4px 0 8px';
-    const input = document.getElementById('nome-jogador');
-    input.parentNode.insertBefore(erro, input.nextSibling);
-  }
-  erro.textContent = mensagem;
-}
-
-function limparErroNome() {
-  const erro = document.getElementById('erro-nome-jogador');
-  if (erro) erro.remove();
-}
-
-document.getElementById('nome-jogador').addEventListener('input', function() {
-  const nome = this.value.trim();
-  if (nome && nomeJaExiste(nome)) {
-    mostrarErroNome('Nome já utilizado por outro jogador.');
-    document.getElementById('confirmar-jogador').disabled = true;
-  } else {
-    limparErroNome();
-    document.getElementById('confirmar-jogador').disabled = false;
-  }
-});
-
 function adicionarJogador() {
-  let nome = document.getElementById('nome-jogador').value.trim();
-
-  if (!nome || nome.length < 3) {
-    nome = gerarNomeAleatorio();
-  }
-
-  // Se o nome (digitado ou aleatório) já existe, não adiciona
-  if (nomeJaExiste(nome)) {
-    mostrarErroNome('Nome já utilizado por outro jogador.');
-    document.getElementById('confirmar-jogador').disabled = true;
-    return;
-  }
-
-  let foto = document.querySelector('input[name="avatar"]:checked')?.value ||
-             document.getElementById('foto-jogador').value ||
-             'avatar1.png';
-
-  if (foto.startsWith('data:')) {
-    document.getElementById('upload-avatar').value = '';
-  } else {
-    document.getElementById('foto-jogador').value = '';
-  }
-
-  const uploadButton = document.querySelector('.avatar-option label[for="upload-avatar"]');
-  uploadButton.style.backgroundImage = '';
-  uploadButton.style.color = 'var(--accent)';
-
-  if (jogadores.length >= MAX_JOGADORES) return;
-
-  jogadores.push({
-    nome,
-    foto,
-    itens: [],
-    total: 0
-  });
-
-  document.getElementById('modal-jogador').style.display = 'none';
-  document.getElementById('nome-jogador').value = '';
-  limparErroNome();
-  document.getElementById('confirmar-jogador').disabled = false;
-  atualizarTela();
+    let nome = document.getElementById('nome-jogador').value.trim();
+    
+    if (!nome || nome.length < 3) {
+        // Gera nome aleatório se nenhum nome válido for fornecido
+        const nomesAleatorios = ['Jogador 1', 'Jogador 2', 'Jogador 3'];
+        nome = nomesAleatorios[Math.floor(Math.random() * nomesAleatorios.length)];
+    }
+    
+    let foto = document.querySelector('input[name="avatar"]:checked')?.value || 
+               document.getElementById('foto-jogador').value || 
+               'avatar1.png';
+    
+    // Limpa o campo de upload após salvar
+    if (foto.startsWith('data:')) {
+      document.getElementById('upload-avatar').value = '';
+    } else {
+      document.getElementById('foto-jogador').value = '';
+    }
+    
+    // Resetar o botão de upload
+    const uploadButton = document.querySelector('.avatar-option label[for="upload-avatar"]');
+    uploadButton.style.backgroundImage = '';
+    uploadButton.style.color = 'var(--accent)';
+    
+    
+    if (jogadores.length >= MAX_JOGADORES) {
+      alert(`Limite de ${MAX_JOGADORES} jogadores atingido!`);
+      return;
+    }
+    
+    jogadores.push({
+      nome,
+      foto,
+      itens: [],
+      total: 0
+    });
+    
+    document.getElementById('modal-jogador').style.display = 'none';
+    document.getElementById('nome-jogador').value = '';
+    atualizarTela();
 }
 
 function removerJogador(index) {
@@ -602,21 +561,31 @@ function resetarLoja() {
 }
 
 window.toggleFiltro = function(categoria) {
-  // 1. Remove a classe 'ativo' de TODOS os botões
-  const botoesFiltro = document.querySelectorAll('.filtro-btn');
-  botoesFiltro.forEach(btn => {
-    btn.classList.remove('ativo');
-  });
-
-  const botaoClicado = Array.from(botoesFiltro).find(btn => 
-    btn.getAttribute('onclick').includes(`'${categoria}'`)
-  );
-  
-  if (botaoClicado) {
-    botaoClicado.classList.add('ativo');
+  if (categoria === "todos") {
+    filtrosAtivos = ["todos"];
+  } else {
+    if (filtrosAtivos.includes("todos")) {
+      filtrosAtivos = [];
+    }
+    if (filtrosAtivos.includes(categoria)) {
+      filtrosAtivos = filtrosAtivos.filter(f => f !== categoria);
+      if (filtrosAtivos.length === 0) filtrosAtivos = ["todos"];
+    } else {
+      filtrosAtivos.push(categoria);
+    }
   }
 
-  filtroAtivo = categoria;
+  // Atualiza classes dos botões
+  const botoesFiltro = document.querySelectorAll('.filtro-btn');
+  botoesFiltro.forEach(btn => {
+    const cat = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+    if (filtrosAtivos.includes(cat)) {
+      btn.classList.add('ativo');
+    } else {
+      btn.classList.remove('ativo');
+    }
+  });
+
   atualizarTela();
 };
 
