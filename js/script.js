@@ -319,7 +319,30 @@ document.addEventListener('DOMContentLoaded', function() {
   
   configurarDragAndDrop();
   
-  atualizarTela();
+  // Tema: alternar múltiplos temas
+  const themeSelector = document.getElementById('theme-selector');
+  const themeClasses = [
+    'light-theme',
+    'dracula-theme'
+  ];
+
+  function setTheme(themeClass) {
+    document.body.classList.remove(...themeClasses);
+    if (themeClass) document.body.classList.add(themeClass);
+    localStorage.setItem('repo-theme', themeClass || '');
+  }
+
+  if (themeSelector) {
+    // Carrega preferência salva
+    const temaSalvo = localStorage.getItem('repo-theme') || '';
+    if (temaSalvo) {
+      themeSelector.value = temaSalvo;
+      setTheme(temaSalvo);
+    }
+    themeSelector.addEventListener('change', function() {
+      setTheme(this.value);
+    });
+  }
 });
 
 function atualizarTela() {

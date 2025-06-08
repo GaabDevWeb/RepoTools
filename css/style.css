@@ -1,3 +1,4 @@
+/* Tema escuro (padrão) */
 :root {
   --bg: #0d0d0d;
   --surface: #1a1a1a;
@@ -6,6 +7,31 @@
   --border: #333;
   --accent: #4a6fa5;
 }
+
+/* Tema claro */
+.light-theme {
+  --bg: #f7f7f7;
+  --surface: #fff;
+  --text: #222;
+  --text-secondary: #666;
+  --border: #ccc;
+  --accent: #1976d2;
+}
+
+/* Tema Dracula */
+.dracula-theme {
+  --bg: #282a36;
+  --surface: #44475a;
+  --text: #f8f8f2;
+  --text-secondary: #bd93f9;
+  --border: #6272a4;
+  --accent: #ff79c6;
+  --yellow: #f1fa8c;
+  --red: #ff5555;
+  --modal-overlay: rgba(40,42,54,0.85);
+}
+
+/* Removidos: .cyberpunk-theme e .pastel-theme */
 
 * {
   margin: 0;
@@ -95,8 +121,8 @@ button:disabled {
 }
 
 .filtro-btn.ativo {
-  background: #4a6ea5b4 !important;
-  color: #111 !important;
+  background: var(--accent) !important;
+  color: var(--bg) !important;
   border-color: transparent !important;
   font-weight: bold;
 }
@@ -122,7 +148,7 @@ button:disabled {
 }
 
 .item:hover {
-  background: #252525;
+  background: var(--surface); /* antes: #252525 */
   cursor: grab;
 }
 
@@ -152,18 +178,18 @@ button:disabled {
   position: absolute;
   top: 8px;
   right: 8px;
-  background: none;
+  background: transparent;
   border: none;
   z-index: 2;
   padding: 0;
   font-size: 15px;
   cursor: pointer;
-  color: #888;
+  color: var(--text-secondary); /* antes: #888 */
   transition: ease 0.5s;
 }
 
 .btn-favorito:hover i {
-  color: #ffd900a9 !important;
+  color: var(--accent) !important;
 }
 
 .item-categoria {
@@ -252,7 +278,7 @@ button:disabled {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.815);
+  background: rgba(0, 0, 0, 0.815); /* Mantido para overlay, mas pode criar uma var se quiser */
   z-index: 100;
   justify-content: center;
   align-items: center;
@@ -316,8 +342,6 @@ button:disabled {
 
 ::-webkit-scrollbar-thumb {
   background: var(--accent);
-  border-radius: 3px;
-  transition: all 0.3s;
 }
 
 .item-jogador {
@@ -396,7 +420,6 @@ button:disabled {
 .progresso-barra {
   width: 100%;
   height: 18px;
-  background: #00000049;
   overflow: hidden;
   border-left: 1px solid var(--border);
   border-right: 1px solid var(--border);
@@ -409,8 +432,34 @@ button:disabled {
 #progresso-preenchido {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #4caf4f9d, #fbc02d 80%, #f44336f3 100%);
+    /* Substitua as cores do gradiente por variáveis para maior consistência */
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent) 70%, var(--bg) 30%),
+      color-mix(in srgb, #fbc02d 80%, var(--surface) 20%) 80%,
+      color-mix(in srgb, #f44336 90%, var(--surface) 10%) 100%
+    );
     transition: width 0.3s;
+}
+
+
+span[style*="color:#888"], .btn-favorito:not(.favoritado) i {
+  color: var(--text-secondary) !important;
+}
+
+/* Se quiser, pode criar uma variável para o overlay do modal */
+:root {
+  --modal-overlay: rgba(0, 0, 0, 0.815);
+}
+.light-theme {
+  --modal-overlay: rgba(0, 0, 0, 0.4);
+}
+.modal {
+  background: var(--modal-overlay);
+}
+
+body, .container, .modal, .item, .card-jogador {
+  transition: background 0.5s, color 0.3s, border-color 0.3s;
 }
 
 @media (max-width: 768px) {

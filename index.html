@@ -13,6 +13,11 @@
 
 <body>
     <div class="container">
+        <select id="theme-selector" style="float:right;margin-bottom:8px;">
+            <option value="">Dark</option>
+            <option value="light-theme">Light</option>
+            <option value="dracula-theme">Dracula</option>
+        </select>
 
         <div class="controles">
             <div class="creditos-container">
@@ -22,18 +27,30 @@
             </div>
 
             <div class="filtros">
-                <button class="filtro-btn ativo" onclick="toggleFiltro('todos')"><i class="fa-solid fa-list"></i> Todos</button>
-                <button class="filtro-btn" onclick="toggleFiltro('favoritos')"><i class="fa-solid fa-star"></i> Favoritos</button>
-                <button class="filtro-btn" onclick="toggleFiltro('armas')"><i class="fa-solid fa-gun"></i> Armas</button>
-                <button class="filtro-btn" onclick="toggleFiltro('upgrades')"><i class="fa-solid fa-arrow-up"></i> Upgrades</button>
-                <button class="filtro-btn" onclick="toggleFiltro('cura')"><i class="fa-solid fa-heart"></i> Cura</button>
-                <button class="filtro-btn" onclick="toggleFiltro('ferramentas')"><i class="fa-solid fa-screwdriver-wrench"></i> Ferramentas</button>
-                <button class="filtro-btn" onclick="toggleFiltro('arremessaveis')"><i class="fa-solid fa-bomb"></i> Arremessáveis</button>
-                <button class="filtro-btn" onclick="toggleFiltro('preco-asc')"><i class="fa-solid fa-arrow-down-1-9"></i> Mais Barato</button>
-                <button class="filtro-btn" onclick="toggleFiltro('preco-desc')"><i class="fa-solid fa-arrow-up-9-1"></i> Mais Caro</button>
+                <button class="filtro-btn ativo" onclick="toggleFiltro('todos')"><i class="fa-solid fa-list"></i> Todos
+                </button>
+                <button class="filtro-btn" onclick="toggleFiltro('favoritos')"><i class="fa-solid fa-star"></i>
+                    Favoritos</button>
+                <button class="filtro-btn" onclick="toggleFiltro('armas')"><i class="fa-solid fa-gun"></i> Armas
+                </button>
+                <button class="filtro-btn" onclick="toggleFiltro('upgrades')"><i class="fa-solid fa-arrow-up"></i>
+                    Upgrades</button>
+                <button class="filtro-btn" onclick="toggleFiltro('cura')"><i class="fa-solid fa-heart"></i> Cura
+                </button>
+                <button class="filtro-btn" onclick="toggleFiltro('ferramentas')"><i
+                        class="fa-solid fa-screwdriver-wrench"></i>
+                    Ferramentas</button>
+                <button class="filtro-btn" onclick="toggleFiltro('arremessaveis')"><i class="fa-solid fa-bomb"></i>
+                    Arremessáveis</button>
+                <button class="filtro-btn" onclick="toggleFiltro('preco-asc')"><i
+                        class="fa-solid fa-arrow-down-1-9"></i>
+                    Mais Barato</button>
+                <button class="filtro-btn" onclick="toggleFiltro('preco-desc')"><i class="fa-solid fa-arrow-up-9-1"></i>
+                    Mais Caro</button>
             </div>
             <div style="position:relative;max-width:300px;width:100%;margin-top:8px;">
-                <input type="text" id="pesquisa-loja" placeholder="Pesquisar itens..." style="padding-left:28px;width:100%;">
+                <input type="text" id="pesquisa-loja" placeholder="Pesquisar itens..."
+                    style="padding-left:28px;width:100%;">
                 <span style="position:absolute;left:8px;top: 40%;transform:translateY(-50%);color:#888;">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </span>
@@ -98,8 +115,8 @@
                 <div class="avatar-option">
                     <label for="upload-avatar" style="cursor:pointer">
                         <i class="fa-solid fa-upload"></i> Upload
-                        <input type="file" id="upload-avatar" accept="image/*" style="display:none" 
-                               onchange="handleAvatarUpload(event)">
+                        <input type="file" id="upload-avatar" accept="image/*" style="display:none"
+                            onchange="handleAvatarUpload(event)">
                     </label>
                 </div>
             </div>
@@ -107,7 +124,9 @@
 
             <div class="modal-botoes">
                 <button id="confirmar-jogador"><i class="fa-solid fa-check"></i> Confirmar</button>
-                <button onclick="document.getElementById('modal-jogador').style.display='none'"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                <button onclick="document.getElementById('modal-jogador').style.display='none'"><i
+                        class="fa-solid fa-xmark"></i>
+                    Cancelar</button>
             </div>
         </div>
     </div>
