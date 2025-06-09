@@ -566,10 +566,11 @@ body, .container, .modal, .item, .card-jogador {
 
 #ranking-jogadores {
   position: fixed;
-  top: 24px;
+  top: 60px; /* abaixo do ícone */
   right: 24px;
   z-index: 999;
   margin: 0;
+  display: none; /* agora controlado via JS */
 }
 
 @media (max-width: 768px) {

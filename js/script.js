@@ -343,6 +343,25 @@ document.addEventListener('DOMContentLoaded', function() {
       setTheme(this.value);
     });
   }
+
+  // Exibe o ranking só ao passar o mouse no ícone
+  const rankingIcone = document.getElementById('ranking-icone');
+  const rankingBox = document.getElementById('ranking-jogadores');
+
+  if (rankingIcone && rankingBox) {
+    rankingIcone.addEventListener('mouseenter', () => {
+      rankingBox.style.display = 'block';
+    });
+    rankingIcone.addEventListener('mouseleave', () => {
+      rankingBox.style.display = 'none';
+    });
+    rankingBox.addEventListener('mouseenter', () => {
+      rankingBox.style.display = 'block';
+    });
+    rankingBox.addEventListener('mouseleave', () => {
+      rankingBox.style.display = 'none';
+    });
+  }
 });
 
 function atualizarTela() {
