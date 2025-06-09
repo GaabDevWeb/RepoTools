@@ -184,12 +184,16 @@ button:disabled {
   padding: 0;
   font-size: 15px;
   cursor: pointer;
-  color: var(--text-secondary); /* antes: #888 */
+  color: var(--text-secondary); 
   transition: ease 0.5s;
 }
 
 .btn-favorito:hover i {
   color: var(--accent) !important;
+}
+
+.btn-favorito:hover{
+  background: transparent !important;
 }
 
 .item-categoria {
@@ -623,3 +627,8 @@ body, .container, .modal, .item, .card-jogador {
   }
 }
 
+.avatar-option.selecionado {
+  border: 3px solid var(--accent) !important;
+  box-shadow: 0 0 0 2px var(--accent) !important;
+  transition: border 0.2s, box-shadow 0.2s !important;
+}
