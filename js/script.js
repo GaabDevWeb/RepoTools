@@ -349,6 +349,7 @@ function atualizarTela() {
   filtrarItens();
   atualizarListaJogadores();
   calcularResumoFinanceiro();
+  atualizarRankingJogadores(); // <-- adicione esta linha
 
   // Desabilita o botão se atingir o limite
   const btnAdicionar = document.getElementById('adicionar-jogador');
@@ -728,3 +729,32 @@ window.toggleFavorito = function(index) {
     }
   }, 0);
 };
+
+function atualizarRankingJogadores() {
+  if (jogadores.length === 0) {
+    document.getElementById('ranking-jogadores').innerHTML = "<em>Nenhum jogador adicionado.</em>";
+    return;
+  }
+
+  const ordenados = [...jogadores].sort((a, b) => b.total - a.total);
+  const maisGastou = ordenados[0];
+  const menosGastou = ordenados.slice().reverse().find(j => j.total > 0) || ordenados[ordenados.length - 1];
+
+  document.getElementById('ranking-jogadores').innerHTML = `
+    <div class="ranking-box">
+      <h3><i class="fa-solid fa-ranking-star"></i> Ranking de Gastos</h3>
+      <div class="ranking-destaques">
+        <div class="ranking-top">
+          <span class="medalha medalha-ouro"><i class="fa-solid fa-crown"></i></span>
+          <span><strong>${maisGastou.nome}</strong></span>
+          <span class="valor-gasto">$${maisGastou.total.toLocaleString()}</span>
+        </div>
+        <div class="ranking-bottom">
+          <span class="medalha medalha-prata"><i class="fa-solid fa-user"></i></span>
+          <span>${menosGastou.nome}</span>
+          <span class="valor-gasto">$${menosGastou.total.toLocaleString()}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
