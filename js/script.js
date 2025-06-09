@@ -522,6 +522,27 @@ function mostrarModalJogador() {
   document.getElementById('modal-jogador').style.display = 'flex';
 }
 
+// Função para abrir o modal e limpar seleção de avatar
+function abrirModalJogador() {
+    // Limpa seleção visual dos avatares
+    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selecionado'));
+    // Limpa seleção dos radios
+    document.querySelectorAll('input[name="avatar"]').forEach(radio => radio.checked = false);
+    // Limpa upload visual (opcional)
+    const uploadLabel = document.querySelector('.avatar-option label[for="upload-avatar"]');
+    if (uploadLabel) {
+        uploadLabel.style.backgroundImage = '';
+        uploadLabel.style.color = '';
+    }
+    // Limpa campo hidden
+    document.getElementById('foto-jogador').value = '';
+    // Exibe o modal
+    document.getElementById('modal-jogador').style.display = 'flex';
+}
+
+// Abra o modal ao clicar no botão "Adicionar Jogador"
+document.getElementById('adicionar-jogador').onclick = abrirModalJogador;
+
 function handleAvatarUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -532,16 +553,17 @@ function handleAvatarUpload(event) {
         document.querySelectorAll('input[name="avatar"]').forEach(radio => {
             radio.checked = false;
         });
-        
+        document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selecionado'));
         // Armazena a URL da imagem no campo hidden
         document.getElementById('foto-jogador').value = e.target.result;
-        
         // Atualiza o fundo do botão de upload
         const uploadButton = document.querySelector('.avatar-option label[for="upload-avatar"]');
         uploadButton.style.backgroundImage = `url(${e.target.result})`;
         uploadButton.style.backgroundSize = 'cover';
         uploadButton.style.backgroundPosition = 'center';
         uploadButton.style.color = 'transparent';
+        // Destaca o botão de upload
+        uploadButton.parentElement.classList.add('selecionado');
     };
     reader.readAsDataURL(file);
 }
@@ -699,7 +721,15 @@ window.toggleFiltro = function(categoria) {
 };
 
 window.selecionarAvatar = function(avatar) {
+  // Marca o radio
   document.querySelector(`input[value="${avatar}"]`).checked = true;
+  // Remove seleção anterior
+  document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selecionado'));
+  // Adiciona classe ao selecionado
+  const opt = Array.from(document.querySelectorAll('.avatar-option')).find(div =>
+    div.querySelector(`input[value="${avatar}"]`)
+  );
+  if (opt) opt.classList.add('selecionado');
 };
 
 
