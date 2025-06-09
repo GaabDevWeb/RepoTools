@@ -751,15 +751,9 @@ window.toggleFavorito = function(index) {
 
 function atualizarRankingJogadores() {
   const rankingDiv = document.getElementById('ranking-jogadores');
-  if (jogadores.length === 0) {
-    rankingDiv.innerHTML = "<em>Nenhum jogador adicionado.</em>";
-    return;
-  }
 
   // Ordena por total gasto (decrescente)
   const ordenados = [...jogadores].sort((a, b) => b.total - a.total);
-  // Pega até 3 jogadores
-  const top3 = ordenados.slice(0, 3);
 
   // Medalhas para os 3 primeiros
   const medalhas = [
@@ -772,18 +766,21 @@ function atualizarRankingJogadores() {
   const titulos = [
     'Magnata',
     'Gastador',
-    'Mão Aberta'
+    'Pão duro'
   ];
 
-  // Título para o último colocado (se houver mais de 1 jogador)
-  let ultimoTitulo = '';
-  if (ordenados.length > 1) {
-    const ultimo = ordenados[ordenados.length - 1];
-    ultimoTitulo = `
-      <div class="ranking-bottom">
-        <span style="font-size:1.2em;">🥖</span>
-        <span><strong>${ultimo.nome}</strong> — <span style="color:#bfa76f">Pão Duro</span></span>
-        <span class="valor-gasto">$${ultimo.total.toLocaleString()}</span>
+  // Monta o pódio com até 3 posições
+  let podioHtml = '';
+  for (let i = 0; i < 3; i++) {
+    const jogador = ordenados[i];
+    podioHtml += `
+      <div class="ranking-top" style="color:${i === 0 ? 'var(--accent)' : i === 1 ? 'silver' : '#cd7f32'}">
+        ${medalhas[i] || ''}
+        <span>
+          <strong>${jogador ? jogador.nome : '-'}</strong>
+          <span class="titulo-podio">${jogador ? titulos[i] : ''}</span>
+        </span>
+        <span class="valor-gasto">${jogador ? '$' + jogador.total.toLocaleString() : '-'}</span>
       </div>
     `;
   }
@@ -792,17 +789,7 @@ function atualizarRankingJogadores() {
     <div class="ranking-box">
       <h3><i class="fa-solid fa-ranking-star"></i> Ranking de Gastos</h3>
       <div class="ranking-destaques">
-        ${top3.map((jogador, i) => `
-          <div class="ranking-top" style="color:${i === 0 ? 'var(--accent)' : i === 1 ? 'silver' : '#cd7f32'}">
-            ${medalhas[i] || ''}
-            <span>
-              <strong>${jogador.nome}</strong>
-              <span class="titulo-podio">${titulos[i] || ''}</span>
-            </span>
-            <span class="valor-gasto">$${jogador.total.toLocaleString()}</span>
-          </div>
-        `).join('')}
-        ${ultimoTitulo}
+        ${podioHtml}
       </div>
     </div>
   `;
