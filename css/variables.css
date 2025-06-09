@@ -1,0 +1,32 @@
+/* Tema escuro (padrão) */
+:root {
+  --bg: #0d0d0d;
+  --surface: #1a1a1a;
+  --text: #f0f0f0;
+  --text-secondary: #7a7a7a;
+  --border: #333;
+  --accent: #4a6fa5;
+}
+
+/* Tema claro */
+.light-theme {
+  --bg: #f7f7f7;
+  --surface: #fff;
+  --text: #222;
+  --text-secondary: #666;
+  --border: #ccc;
+  --accent: #1976d2;
+}
+
+/* Tema Dracula */
+.dracula-theme {
+  --bg: #282a36;
+  --surface: #44475a;
+  --text: #f8f8f2;
+  --text-secondary: #bd93f9;
+  --border: #6272a4;
+  --accent: #ff79c6;
+  --yellow: #f1fa8c;
+  --red: #ff5555;
+  --modal-overlay: rgba(40,42,54,0.85);
+}

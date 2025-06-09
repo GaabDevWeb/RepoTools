@@ -1,0 +1,78 @@
+body, .container, .modal, .item, .card-jogador {
+  transition: background 0.5s, color 0.3s, border-color 0.3s;
+}
+
+.resumo-financeiro {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.resumo-valores {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.total-gasto, .saldo-restante {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1 1 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.resumo-label {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.progresso-financeiro {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0;
+  margin-bottom: 24px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.progresso-barra {
+  width: 100%;
+  height: 18px;
+  overflow: hidden;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-top: none;
+  padding: 2px;
+  margin-top: 0;
+}
+
+#progresso-preenchido {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent) 70%, var(--bg) 30%),
+    color-mix(in srgb, #fbc02d 80%, var(--surface) 20%) 80%,
+    color-mix(in srgb, #f44336 90%, var(--surface) 10%) 100%
+  );
+  transition: width 0.3s;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  transition: all 0.3s;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+}

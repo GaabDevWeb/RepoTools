@@ -1,0 +1,21 @@
+.item-jogador {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.item-jogador > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-jogador img {
+  width: 70px !important;
+  height: 70px !important;
+  object-fit: cover;
+}
+.card-jogador:focus-within {
+  animation: pulse 0.5s ease;
+}

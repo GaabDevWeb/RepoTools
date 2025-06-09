@@ -1,0 +1,55 @@
+input {
+  width: 100%;
+  margin-bottom: 8px;
+}
+input:hover, input:focus {
+  border-color: var(--accent);
+}
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.3);
+}
+
+.avatar-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.card-jogador {
+  p {
+    margin: 10px 0 5px;
+  }
+
+  input {
+    border: none;
+    background: none;
+  }
+}
+
+/* Seletor de temas estilizado */
+#theme-selector {
+  appearance: none;
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  padding: 7px 10px 7px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
+  box-shadow: none;
+  min-width: 120px;
+  outline: none;
+}
+
+#theme-selector option {
+  background: none;
+  color: var(--text);
+  border: none;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+#theme-selector:hover {
+  background: var(--surface);
+  color: var(--accent);
+  border-color: var(--accent);
+}
