@@ -350,16 +350,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (rankingIcone && rankingBox) {
     rankingIcone.addEventListener('mouseenter', () => {
-      rankingBox.style.display = 'block';
+      rankingBox.classList.add('mostrar');
     });
     rankingIcone.addEventListener('mouseleave', () => {
-      rankingBox.style.display = 'none';
+      rankingBox.classList.remove('mostrar');
     });
     rankingBox.addEventListener('mouseenter', () => {
-      rankingBox.style.display = 'block';
+      rankingBox.classList.add('mostrar');
     });
     rankingBox.addEventListener('mouseleave', () => {
-      rankingBox.style.display = 'none';
+      rankingBox.classList.remove('mostrar');
     });
   }
 });
@@ -750,29 +750,59 @@ window.toggleFavorito = function(index) {
 };
 
 function atualizarRankingJogadores() {
+  const rankingDiv = document.getElementById('ranking-jogadores');
   if (jogadores.length === 0) {
-    document.getElementById('ranking-jogadores').innerHTML = "<em>Nenhum jogador adicionado.</em>";
+    rankingDiv.innerHTML = "<em>Nenhum jogador adicionado.</em>";
     return;
   }
 
+  // Ordena por total gasto (decrescente)
   const ordenados = [...jogadores].sort((a, b) => b.total - a.total);
-  const maisGastou = ordenados[0];
-  const menosGastou = ordenados.slice().reverse().find(j => j.total > 0) || ordenados[ordenados.length - 1];
+  // Pega até 3 jogadores
+  const top3 = ordenados.slice(0, 3);
 
-  document.getElementById('ranking-jogadores').innerHTML = `
+  // Medalhas para os 3 primeiros
+  const medalhas = [
+    '<span class="medalha medalha-ouro"><i class="fa-solid fa-crown"></i></span>',
+    '<span class="medalha medalha-prata"><i class="fa-solid fa-medal"></i></span>',
+    '<span class="medalha" style="color:#cd7f32"><i class="fa-solid fa-award"></i></span>'
+  ];
+
+  // Títulos engraçados para o pódio
+  const titulos = [
+    'Magnata',
+    'Gastador',
+    'Mão Aberta'
+  ];
+
+  // Título para o último colocado (se houver mais de 1 jogador)
+  let ultimoTitulo = '';
+  if (ordenados.length > 1) {
+    const ultimo = ordenados[ordenados.length - 1];
+    ultimoTitulo = `
+      <div class="ranking-bottom">
+        <span style="font-size:1.2em;">🥖</span>
+        <span><strong>${ultimo.nome}</strong> — <span style="color:#bfa76f">Pão Duro</span></span>
+        <span class="valor-gasto">$${ultimo.total.toLocaleString()}</span>
+      </div>
+    `;
+  }
+
+  rankingDiv.innerHTML = `
     <div class="ranking-box">
       <h3><i class="fa-solid fa-ranking-star"></i> Ranking de Gastos</h3>
       <div class="ranking-destaques">
-        <div class="ranking-top">
-          <span class="medalha medalha-ouro"><i class="fa-solid fa-crown"></i></span>
-          <span><strong>${maisGastou.nome}</strong></span>
-          <span class="valor-gasto">$${maisGastou.total.toLocaleString()}</span>
-        </div>
-        <div class="ranking-bottom">
-          <span class="medalha medalha-prata"><i class="fa-solid fa-user"></i></span>
-          <span>${menosGastou.nome}</span>
-          <span class="valor-gasto">$${menosGastou.total.toLocaleString()}</span>
-        </div>
+        ${top3.map((jogador, i) => `
+          <div class="ranking-top" style="color:${i === 0 ? 'var(--accent)' : i === 1 ? 'silver' : '#cd7f32'}">
+            ${medalhas[i] || ''}
+            <span>
+              <strong>${jogador.nome}</strong>
+              <span class="titulo-podio">${titulos[i] || ''}</span>
+            </span>
+            <span class="valor-gasto">$${jogador.total.toLocaleString()}</span>
+          </div>
+        `).join('')}
+        ${ultimoTitulo}
       </div>
     </div>
   `;
