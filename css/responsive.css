@@ -1,0 +1,27 @@
+@media (max-width: 768px) {
+  .container {
+    padding: 8px;
+    margin-top: 64px;
+  }
+  
+  .itens-loja, .lista-jogadores {
+    grid-template-columns: 1fr;
+  }
+
+  #ranking-icone {
+    top: 12px !important;
+    right: 12px !important;
+    bottom: unset !important;
+    left: unset !important;
+    position: fixed !important;
+    width: 48px;
+    height: 48px;
+    z-index: 500;
+    font-size: 1.2em !important;
+    transition: box-shadow 0.2s, background 0.2s;
+  }
+  #ranking-icone i {
+    font-size: 1.7em !important;
+    color: var(--accent) !important;
+  }
+}

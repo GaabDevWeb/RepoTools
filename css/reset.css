@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Courier New', monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  padding: 16px;
+  line-height: 1.4;
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin: 24px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: normal;
+  margin-bottom: 8px;
+}

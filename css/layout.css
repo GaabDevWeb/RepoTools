@@ -1,0 +1,32 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  background: var(--surface);
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.itens-loja, .lista-jogadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+#loja {
+  border: 1px solid var(--border);
+  margin: 16px 0;
+  overflow: hidden;
+  max-height: 300px;
+}
+
+#loja.ativo-scroll {
+  overflow-y: auto;
+}
