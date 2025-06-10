@@ -39,5 +39,5 @@ entrarBtn.onclick = async () => {
         return;
     }
     // Redireciona para a loja passando o código da sala na URL
-    window.location.href = `loja.html?sala=${salaId}`;
+    window.location.href = `index.html?sala=${salaId}`;
 };
