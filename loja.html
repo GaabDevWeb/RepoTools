@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R.E.P.O.</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./images/repoLogo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+    <div id="ranking-icone" style="position:fixed;top:24px;right:24px;z-index:1000;cursor:pointer;">
+        <i class="fa-solid fa-ranking-star" style="font-size:2em;color:var(--accent);"></i>
+    </div>
+    <div id="ranking-jogadores"></div>
+    <div class="container">
+        <select id="theme-selector" style="float:right;margin-bottom:8px;">
+            <option value="">Dark</option>
+            <option value="light-theme">Light</option>
+            <option value="dracula-theme">Dracula</option>
+        </select>
+
+        <div class="controles">
+            <div class="creditos-container">
+                <label for="creditosInput"><i class="fa-solid fa-wallet"></i> Total:</label>
+                <input type="number" id="creditosInput" value="0" min="0">
+                <button id="resetar-loja"><i class="fa-solid fa-rotate-left"></i> Resetar</button>
+            </div>
+
+            <div class="filtros">
+                <button class="filtro-btn ativo" onclick="toggleFiltro('todos')"><i class="fa-solid fa-list"></i> Todos
+                </button>
+                <button class="filtro-btn" onclick="toggleFiltro('favoritos')"><i class="fa-solid fa-star"></i>
+                    Favoritos</button>
+                <button class="filtro-btn" onclick="toggleFiltro('armas')"><i class="fa-solid fa-gun"></i> Armas
+                </button>
+                <button class="filtro-btn" onclick="toggleFiltro('upgrades')"><i class="fa-solid fa-arrow-up"></i>
+                    Upgrades</button>
+                <button class="filtro-btn" onclick="toggleFiltro('cura')"><i class="fa-solid fa-heart"></i> Cura
+                </button>
+                <button class="filtro-btn" onclick="toggleFiltro('ferramentas')"><i
+                        class="fa-solid fa-screwdriver-wrench"></i>
+                    Ferramentas</button>
+                <button class="filtro-btn" onclick="toggleFiltro('arremessaveis')"><i class="fa-solid fa-bomb"></i>
+                    Arremessáveis</button>
+                <button class="filtro-btn" onclick="toggleFiltro('preco-asc')"><i
+                        class="fa-solid fa-arrow-down-1-9"></i>
+                    Mais Barato</button>
+                <button class="filtro-btn" onclick="toggleFiltro('preco-desc')"><i class="fa-solid fa-arrow-up-9-1"></i>
+                    Mais Caro</button>
+            </div>
+            <div style="position:relative;max-width:300px;width:100%;margin-top:8px;">
+                <input type="text" id="pesquisa-loja" placeholder="Pesquisar itens..."
+                    style="padding-left:28px;width:100%;">
+                <span style="position:absolute;left:8px;top: 40%;transform:translateY(-50%);color:#888;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+            </div>
+        </div>
+
+        <div id="loja" class="itens-loja"></div>
+
+        <h2><i class="fa-solid fa-users"></i> Jogadores</h2>
+        <button id="adicionar-jogador"><i class="fa-solid fa-user-plus"></i> Adicionar Jogador</button>
+        <div id="lista-jogadores" class="lista-jogadores"></div>
+
+        <div class="resumo-financeiro">
+            <div class="resumo-valores">
+                <div class="total-gasto">
+                    <span class="resumo-label"><i class="fa-solid fa-money-bill-wave"></i> Total Gasto:</span>
+                    <span id="total-gasto" class="resumo-valor">$0</span>
+                </div>
+                <div class="saldo-restante">
+                    <span class="resumo-label"><i class="fa-solid fa-piggy-bank"></i> Saldo Restante:</span>
+                    <span id="saldo-restante" class="resumo-valor">$0</span>
+                </div>
+            </div>
+            <div class="progresso-barra">
+                <div id="progresso-preenchido"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-jogador" class="modal">
+        <div class="modal-conteudo">
+            <h3>Adicionar Jogador</h3>
+            <label for="nome-jogador">Nome:</label>
+            <input type="text" id="nome-jogador" placeholder="Nome do jogador">
+
+            <label for="foto-jogador">Avatar:</label>
+            <div class="avatar-options">
+                <div class="avatar-option" onclick="selecionarAvatar('avatar1.png')">
+                    <input type="radio" name="avatar" value="avatar1.png">
+                    <img src="images/avatars/avatar1.png" alt="Avatar 1">
+                </div>
+                <div class="avatar-option" onclick="selecionarAvatar('avatar2.png')">
+                    <input type="radio" name="avatar" value="avatar2.png">
+                    <img src="images/avatars/avatar2.png" alt="Avatar 2">
+                </div>
+                <div class="avatar-option" onclick="selecionarAvatar('avatar3.png')">
+                    <input type="radio" name="avatar" value="avatar3.png">
+                    <img src="images/avatars/avatar3.png" alt="Avatar 3">
+                </div>
+                <div class="avatar-option" onclick="selecionarAvatar('avatar4.png')">
+                    <input type="radio" name="avatar" value="avatar4.png">
+                    <img src="images/avatars/avatar4.png" alt="Avatar 4">
+                </div>
+                <div class="avatar-option" onclick="selecionarAvatar('avatar5.png')">
+                    <input type="radio" name="avatar" value="avatar5.png">
+                    <img src="images/avatars/avatar5.png" alt="Avatar 5">
+                </div>
+                <div class="avatar-option" onclick="selecionarAvatar('avatar6.png')">
+                    <input type="radio" name="avatar" value="avatar6.png">
+                    <img src="images/avatars/avatar6.png" alt="Avatar 6">
+                </div>
+                <div class="avatar-option">
+                    <label for="upload-avatar" style="cursor:pointer">
+                        <i class="fa-solid fa-upload"></i> Upload
+                        <input type="file" id="upload-avatar" accept="image/*" style="display:none"
+                            onchange="handleAvatarUpload(event)">
+                    </label>
+                </div>
+            </div>
+            <input type="hidden" id="foto-jogador" value="">
+
+            <div class="modal-botoes">
+                <button id="confirmar-jogador"><i class="fa-solid fa-check"></i> Confirmar</button>
+                <button onclick="document.getElementById('modal-jogador').style.display='none'"><i
+                        class="fa-solid fa-xmark"></i>
+                    Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
+
+</html>
