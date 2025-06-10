@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Firebase Multiplayer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: #181818;
+            color: #fff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #sala {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 32px;
+        }
+        textarea {
+            font-size: 1.2em;
+            width: 350px;
+            height: 120px;
+            margin-top: 16px;
+            border-radius: 8px;
+            border: none;
+            padding: 12px;
+            resize: none;
+        }
+        input, button {
+            font-size: 1.1em;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            margin: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Teste Firebase Multiplayer</h2>
+    <input id="sala-codigo" placeholder="Código da sala">
+    <button id="entrar-sala">Entrar</button>
+    <!-- O botão "Criar Sala" será inserido via JS ao lado do input -->
+    <div id="sala">
+        <h3 id="sala-id"></h3>
+        <textarea id="texto-compartilhado" placeholder="Digite algo..."></textarea>
+    </div>
+    <!-- Firebase 8.x SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+      // Cole aqui suas credenciais do Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyDAm1-pfNQWwU0XkwMgWX49E3B98vdu_30",
+        authDomain: "repotools.firebaseapp.com",
+        databaseURL: "https://repotools-default-rtdb.firebaseio.com",
+        projectId: "repotools",
+        storageBucket: "repotools.appspot.com",
+        messagingSenderId: "424897022287",
+        appId: "1:424897022287:web:3f5169519d4c726e2cdd3a"
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="./firebase-teste.js"></script>
+</body>
+</html>
