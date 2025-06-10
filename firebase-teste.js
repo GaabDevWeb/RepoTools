@@ -23,7 +23,7 @@ criarBtn.onclick = async () => {
     const codigo = gerarCodigoSala();
     const salaRef = firebase.database().ref('salas/' + codigo);
     await salaRef.set({ texto: "" });
-    // Redireciona para a loja passando o código da sala na URL
+    console.log('Sala criada:', codigo);
     window.location.href = `loja.html?sala=${codigo}`;
 };
 
@@ -34,10 +34,10 @@ entrarBtn.onclick = async () => {
     const salaRef = firebase.database().ref('salas/' + salaId);
 
     const snapshot = await salaRef.once('value');
+    console.log('Tentando entrar na sala:', salaId, 'Snapshot:', snapshot.val());
     if (!snapshot.exists()) {
         alert('Sala não encontrada!');
         return;
     }
-    // Redireciona para a loja passando o código da sala na URL
-    window.location.href = `index.html?sala=${salaId}`;
+    window.location.href = `loja.html?sala=${salaId}`;
 };
