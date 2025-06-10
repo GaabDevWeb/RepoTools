@@ -1,0 +1,64 @@
+# 📄 Documentação do Projeto R.E.P.O.
+
+## 1. Visão Geral
+
+O projeto R.E.P.O. é uma aplicação web dinâmica, colaborativa e expansível, com foco inicial em ranking de jogadores, gerenciamento de créditos e loja de itens, utilizando Firebase Realtime Database para sincronização em tempo real. O objetivo é criar uma base sólida para evoluir para funcionalidades multiplayer, salas, chat, histórico e muito mais.
+
+---
+
+## 2. Arquitetura e Tecnologias
+
+- **Frontend:** HTML, CSS, JavaScript (modular, ES6+)
+- **UI:** Font Awesome, temas customizáveis, modais, filtros dinâmicos
+- **Backend:** Firebase Realtime Database
+- **Hospedagem:** GitHub Pages ou qualquer serviço de arquivos estáticos
+- **Sincronização:** Listeners do Firebase para atualização instantânea do DOM
+
+---
+
+## 3. Funcionalidades Básicas
+
+### 3.1. Ranking de Jogadores
+- Exibe lista de jogadores e suas pontuações em tempo real.
+- Atualização automática ao alterar pontuação de qualquer jogador.
+
+### 3.2. Gerenciamento de Jogadores
+- Adicionar jogador (nome, avatar, upload de imagem).
+- Remover jogador.
+- Atualizar pontuação e créditos.
+
+### 3.3. Loja de Itens
+- Lista de itens filtrável e pesquisável.
+- Compra de itens desconta créditos do jogador.
+- Reset da loja e créditos.
+
+### 3.4. Temas
+- Troca de tema visual (Dark, Light, Dracula).
+
+---
+
+## 4. Estrutura de Dados no Firebase
+
+```json
+{
+  "salas": {
+    "AB123": {
+      "jogadores": {
+        "uid1": { "nome": "Ana", "avatar": "avatar1.png", "creditos": 500, "pontos": 120 },
+        "uid2": { "nome": "Beto", "avatar": "avatar2.png", "creditos": 300, "pontos": 80 }
+      },
+      "loja": {
+        "item1": { "nome": "Espada", "preco": 100, "categoria": "armas" }
+      },
+      "chat": {
+        "msg1": { "autor": "Ana", "texto": "Oi!" }
+      }
+    }
+  }
+}
+```
+
+## 5. Fluxo de Funcionamento
+...
+
+(continuação do conteúdo acima)
