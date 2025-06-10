@@ -24,7 +24,7 @@ criarBtn.onclick = async () => {
     const salaRef = firebase.database().ref('salas/' + codigo);
     await salaRef.set({ texto: "" });
     // Redireciona para a loja passando o código da sala na URL
-    window.location.href = `index.html?sala=${codigo}`;
+    window.location.href = `loja.html?sala=${codigo}`;
 };
 
 // Entrar em Sala
