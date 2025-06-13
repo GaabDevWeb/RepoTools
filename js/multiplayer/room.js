@@ -13,11 +13,17 @@ function gerarCodigoSala(tamanho = 5) {
   return codigo;
 }
 
+function getLojaPath() {
+  // Garante que funciona tanto local quanto no GitHub Pages
+  const base = window.location.origin + window.location.pathname.replace(/index\.html$/, '');
+  return `${base}loja.html`;
+}
+
 criarBtn.onclick = async () => {
   const codigo = gerarCodigoSala();
   const salaRef = firebase.database().ref('salas/' + codigo);
   await salaRef.set({ texto: "" });
-  window.location.href = `./public/loja.html?sala=${codigo}`;
+  window.location.href = `${getLojaPath()}?modo=multi&sala=${codigo}`;
 };
 
 entrarBtn.onclick = async () => {
@@ -29,5 +35,5 @@ entrarBtn.onclick = async () => {
     alert('Sala não encontrada!');
     return;
   }
-  window.location.href = `./public/loja.html?sala=${salaId}`;
+  window.location.href = `${getLojaPath()}?modo=multi&sala=${salaId}`;
 };
