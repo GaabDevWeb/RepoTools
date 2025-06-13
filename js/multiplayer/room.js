@@ -17,7 +17,7 @@ criarBtn.onclick = async () => {
   const codigo = gerarCodigoSala();
   const salaRef = firebase.database().ref('salas/' + codigo);
   await salaRef.set({ texto: "" });
-  window.location.href = `loja.html?sala=${codigo}`;
+  window.location.href = `./public/loja.html?sala=${codigo}`;
 };
 
 entrarBtn.onclick = async () => {
@@ -29,5 +29,5 @@ entrarBtn.onclick = async () => {
     alert('Sala não encontrada!');
     return;
   }
-  window.location.href = `loja.html?sala=${salaId}`;
+  window.location.href = `./public/loja.html?sala=${salaId}`;
 };
