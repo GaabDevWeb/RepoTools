@@ -28,16 +28,22 @@ export function adicionarJogador() {
     return;
   }
 
-  window.jogadores.push({
+  const novoJogador = {
     nome,
     foto,
     itens: [],
     total: 0
-  });
+  };
+
+  if (window.getModo && window.getModo() === 'multi' && window.adicionarJogadorMultiplayer) {
+    window.adicionarJogadorMultiplayer(novoJogador);
+  } else {
+    window.jogadores.push(novoJogador);
+    atualizarTela();
+  }
 
   document.getElementById('modal-jogador').style.display = 'none';
   document.getElementById('nome-jogador').value = '';
-  atualizarTela();
 }
 
 export function adicionarItem(jogadorIndex, itemIndex) {
@@ -49,9 +55,15 @@ export function adicionarItem(jogadorIndex, itemIndex) {
     return;
   }
 
-  window.jogadores[jogadorIndex].itens.push({ ...item });
-  window.jogadores[jogadorIndex].total += item.preco;
-  atualizarTela();
+  if (window.getModo && window.getModo() === 'multi' && window.adicionarItemMultiplayer) {
+    // Descubra o jogadorId (veja nota acima)
+    const jogadorId = Object.keys(window.jogadoresObj || {})[jogadorIndex];
+    window.adicionarItemMultiplayer(jogadorId, item);
+  } else {
+    window.jogadores[jogadorIndex].itens.push({ ...item });
+    window.jogadores[jogadorIndex].total += item.preco;
+    atualizarTela();
+  }
 }
 
 export function atualizarListaJogadores() {

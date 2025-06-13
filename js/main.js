@@ -53,3 +53,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     configurarListeners();
 });
+
+window.getModo = getModo;
