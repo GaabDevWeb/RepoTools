@@ -12,6 +12,7 @@ window.filtrosAtivos = ["todos"];
 window.filtroAtivo = "todos";
 window.MAX_JOGADORES = 6;
 window.draggedItem = null;
+window.getModo = getModo;
 
 // Função para pegar o código da sala da URL
 function getCodigoSala() {
@@ -54,4 +55,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     configurarListeners();
 });
 
-window.getModo = getModo;
