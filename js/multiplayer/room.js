@@ -15,8 +15,14 @@ function gerarCodigoSala(tamanho = 5) {
 
 function getLojaPath() {
   // Garante que funciona tanto local quanto no GitHub Pages
-  const base = window.location.origin + window.location.pathname.replace(/index\.html$/, '');
-  return `${base}loja.html`;
+  let path = window.location.pathname;
+  if (path.endsWith('index.html')) {
+    path = path.replace(/index\.html$/, '');
+  }
+  if (!path.endsWith('/')) {
+    path += '/';
+  }
+  return window.location.origin + path + 'loja.html';
 }
 
 criarBtn.onclick = async () => {
