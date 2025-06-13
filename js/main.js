@@ -19,7 +19,13 @@ function getCodigoSala() {
     return params.get('sala') || '';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// Função para pegar o modo da URL
+function getModo() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('modo') || 'single';
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     // Exibe o código da sala no topo, se existir
     const codigoSala = getCodigoSala();
     if (codigoSala) {
@@ -35,6 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
             else document.body.insertBefore(divTopo, document.body.firstChild);
         }
         divTopo.textContent = `Código da sala: ${codigoSala}`;
+    }
+
+    // Detecta modo e carrega multiplayer se necessário
+    const modo = getModo();
+    if (modo === 'multi') {
+        // Carrega sincronização multiplayer dinamicamente
+        const { iniciarSyncSala } = await import('./multiplayer/syncSala.js');
+        iniciarSyncSala(codigoSala);
     }
 
     configurarListeners();

@@ -1,0 +1,61 @@
+Relatório de Recursos para Evolução do Projeto RepoTools
+1. Funcionalidades Essenciais (Prioridade Alta)
+Identificação de Usuários
+
+Permitir que cada usuário escolha um nome/nickname ao entrar na sala.
+Exibir a lista de jogadores conectados na sala.
+Rolagem de Dados Virtual
+
+Adicionar botões para rolar dados (d4, d6, d8, d10, d12, d20, d100).
+Mostrar o resultado da rolagem para todos na sala, com o nome de quem rolou.
+Chat em Tempo Real
+
+Campo para envio de mensagens de texto.
+Exibir mensagens em ordem cronológica, identificando o remetente.
+Upload e Compartilhamento de Mapas/Imagens
+
+Mestre pode fazer upload de imagens (mapas, handouts).
+Todos na sala podem visualizar as imagens compartilhadas.
+2. Funcionalidades Importantes (Prioridade Média)
+Fichas de Personagem
+
+Campos editáveis para atributos, perícias, pontos de vida, etc.
+Cada jogador pode editar apenas sua ficha.
+Inventário e Loja
+
+Sistema para adicionar/remover itens do inventário.
+Mestre pode liberar itens para compra, jogadores compram com saldo.
+Controle de Pontos
+
+Gerenciamento de pontos de vida, mana, sanidade, etc.
+Permissões de Mestre/Jogador
+
+Mestre tem permissões extras (ex: upload de mapas, controle de iniciativa).
+3. Funcionalidades Avançadas (Prioridade Baixa/Futuro)
+Marcadores/Tokens no Mapa
+
+Permitir mover tokens (personagens/monstros) sobre o mapa.
+Iniciativa e Ordem de Turnos
+
+Sistema para organizar a ordem de ações em combate.
+Notas Compartilhadas
+
+Área para anotações visíveis a todos ou só ao mestre.
+Fog of War
+
+Mestre pode ocultar/revelar partes do mapa.
+Logs de Sessão
+
+Histórico de chat, rolagens e ações.
+Macros e Ações Rápidas
+
+Botões para rolar ataques, magias, etc.
+Sugestão de Roadmap Inicial
+Identificação de usuários e lista de jogadores
+Rolagem de dados
+Chat
+Upload de mapas
+Fichas de personagem
+Inventário/loja
+Permissões de mestre
+Recursos avançados (tokens, iniciativa, fog of war, etc)
