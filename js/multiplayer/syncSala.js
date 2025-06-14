@@ -505,9 +505,17 @@ export function iniciarSyncSala(codigoSala) {
         if (jogador.itens) {
           jogador.itens.forEach(item => {
             if (item.indexOriginal === parseInt(index)) {
+              console.log(`Atualizando preço do item ${item.nome} de ${item.preco} para ${novoPreco}`);
               item.preco = novoPreco;
             }
           });
+        }
+      });
+      
+      // Recalcula os totais dos jogadores
+      window.jogadores.forEach(jogador => {
+        if (jogador.itens) {
+          jogador.total = jogador.itens.reduce((total, item) => total + item.preco, 0);
         }
       });
       
@@ -545,9 +553,17 @@ export function iniciarSyncSala(codigoSala) {
             if (jogador.itens) {
               jogador.itens.forEach(item => {
                 if (item.indexOriginal === parseInt(index)) {
+                  console.log(`Restaurando preço do item ${item.nome} para ${precoAnterior}`);
                   item.preco = precoAnterior;
                 }
               });
+            }
+          });
+          
+          // Recalcula os totais dos jogadores
+          window.jogadores.forEach(jogador => {
+            if (jogador.itens) {
+              jogador.total = jogador.itens.reduce((total, item) => total + item.preco, 0);
             }
           });
           

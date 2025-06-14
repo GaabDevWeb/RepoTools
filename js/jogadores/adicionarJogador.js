@@ -58,11 +58,15 @@ export function adicionarItem(jogadorIndex, itemIndex) {
   
   // Cria uma cópia do item com o preço atualizado
   const item = {
-    ...window.itensLoja[itemIndex],
-    indexOriginal: itemIndex // Adiciona o índice original para referência
+    nome: window.itensLoja[itemIndex].nome,
+    preco: window.itensLoja[itemIndex].preco, // Usa o preço atualizado
+    categoria: window.itensLoja[itemIndex].categoria,
+    imagem: window.itensLoja[itemIndex].imagem,
+    descricao: window.itensLoja[itemIndex].descricao,
+    indexOriginal: itemIndex
   };
   
-  console.log("Item copiado:", item);
+  console.log("Item copiado com preço atualizado:", item);
   
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
   const jogador = window.jogadores[jogadorIndex];
