@@ -51,17 +51,6 @@ export function atualizarRankingJogadores() {
       </div>
     </div>
   `;
-
-  // Adiciona evento de clique para mostrar/esconder o ranking
-  const rankingIcone = document.getElementById('ranking-icone');
-  if (rankingIcone) {
-    rankingIcone.onclick = () => {
-      rankingDiv.style.display = rankingDiv.style.display === 'none' ? 'block' : 'none';
-    };
-  }
-
-  // Esconde o ranking inicialmente
-  rankingDiv.style.display = 'none';
 }
 
 // Adiciona a função ao objeto window para acesso global

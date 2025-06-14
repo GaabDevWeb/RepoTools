@@ -78,7 +78,8 @@
   transition: opacity 0.4s cubic-bezier(.42,0,.58,1), transform 0.4s cubic-bezier(.42,0,.58,1);
 }
 
-#ranking-jogadores.mostrar {
+#ranking-icone:hover + #ranking-jogadores,
+#ranking-jogadores:hover {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
