@@ -75,15 +75,17 @@ export function adicionarItem(jogadorIndex, itemIndex) {
   if (window.getModo && window.getModo() === 'multi' && window.adicionarItemMultiplayer) {
     // Adiciona temporariamente o item localmente para exibição imediata
     jogador.itens.push({ ...item });
-    jogador.total += item.preco;
+    jogador.total = (parseInt(jogador.total) || 0) + item.preco;
     atualizarListaJogadores();
+    calcularResumoFinanceiro();
     
     // Envia para o Firebase
     window.adicionarItemMultiplayer(jogador.id, item);
   } else {
     jogador.itens.push({ ...item });
-    jogador.total += item.preco;
+    jogador.total = (parseInt(jogador.total) || 0) + item.preco;
     atualizarTela();
+    calcularResumoFinanceiro();
   }
 }
 
@@ -111,7 +113,7 @@ export function atualizarListaJogadores() {
           </div>
         `).join('')}
       </div>
-      <p><i class="fa-solid fa-coins"></i> Total: $${jogador.total.toLocaleString()}</p>
+      <p><i class="fa-solid fa-coins"></i> Total: $${(parseInt(jogador.total) || 0).toLocaleString()}</p>
       <button onclick="removerJogador(${index})"><i class="fa-solid fa-user-minus"></i> Remover</button>
     </div>
   `).join('');
@@ -120,6 +122,9 @@ export function atualizarListaJogadores() {
   container.style.display = 'none';
   container.offsetHeight; // Força reflow
   container.style.display = '';
+  
+  // Atualiza o resumo financeiro após atualizar a lista
+  calcularResumoFinanceiro();
 }
 
 export function calcularResumoFinanceiro() {
@@ -128,8 +133,9 @@ export function calcularResumoFinanceiro() {
   
   const creditos = parseInt(document.getElementById("creditosInput")?.value) || 0;
   const totalGasto = window.jogadores.reduce((total, j) => {
-    console.log("Jogador:", j.nome, "Total:", j.total);
-    return total + (parseInt(j.total) || 0);
+    const jogadorTotal = parseInt(j.total) || 0;
+    console.log("Jogador:", j.nome, "Total:", jogadorTotal);
+    return total + jogadorTotal;
   }, 0);
   
   console.log("Total gasto:", totalGasto);
