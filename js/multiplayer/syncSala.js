@@ -16,54 +16,58 @@ export function iniciarSyncSala(codigoSala) {
   window.jogadoresObj = {};
   window.jogadores = [];
 
+  // Função para atualizar a tela com os dados
+  function atualizarTelaComDados(salaData) {
+    console.log("Atualizando tela com dados:", salaData);
+    
+    // Inicializa os jogadores
+    if (salaData.jogadores) {
+      window.jogadoresObj = salaData.jogadores;
+      window.jogadores = Object.entries(salaData.jogadores).map(([id, jogador]) => ({
+        ...jogador,
+        id
+      }));
+      console.log("Jogadores carregados:", window.jogadores);
+    }
+
+    // Inicializa os créditos
+    if (salaData.creditos !== undefined) {
+      const creditosInput = document.getElementById('creditosInput');
+      if (creditosInput) {
+        creditosInput.value = salaData.creditos;
+      }
+    }
+
+    // Inicializa os filtros
+    if (salaData.filtros) {
+      window.filtrosAtivos = salaData.filtros;
+      window.filtroAtivo = salaData.filtros[0];
+    }
+
+    // Inicializa os preços dos itens
+    if (salaData.itens) {
+      Object.entries(salaData.itens).forEach(([index, preco]) => {
+        if (window.itensLoja[index]) {
+          window.itensLoja[index].preco = preco;
+        }
+      });
+    }
+
+    // Força atualização da tela
+    if (window.atualizarListaJogadores) {
+      window.atualizarListaJogadores();
+    }
+    if (window.atualizarTela) {
+      window.atualizarTela();
+    }
+  }
+
   // Carrega os dados iniciais da sala
   get(salaRef).then((snapshot) => {
     const salaData = snapshot.val();
     if (salaData) {
       console.log("Dados da sala carregados:", salaData);
-      
-      // Inicializa os jogadores
-      if (salaData.jogadores) {
-        window.jogadoresObj = salaData.jogadores;
-        window.jogadores = Object.entries(salaData.jogadores).map(([id, jogador]) => ({
-          ...jogador,
-          id
-        }));
-        console.log("Jogadores iniciais carregados:", window.jogadores);
-        
-        // Força atualização imediata da lista de jogadores
-        if (window.atualizarListaJogadores) {
-          window.atualizarListaJogadores();
-        }
-      }
-
-      // Inicializa os créditos
-      if (salaData.creditos !== undefined) {
-        const creditosInput = document.getElementById('creditosInput');
-        if (creditosInput) {
-          creditosInput.value = salaData.creditos;
-        }
-      }
-
-      // Inicializa os filtros
-      if (salaData.filtros) {
-        window.filtrosAtivos = salaData.filtros;
-        window.filtroAtivo = salaData.filtros[0];
-      }
-
-      // Inicializa os preços dos itens
-      if (salaData.itens) {
-        Object.entries(salaData.itens).forEach(([index, preco]) => {
-          if (window.itensLoja[index]) {
-            window.itensLoja[index].preco = preco;
-          }
-        });
-      }
-
-      // Força atualização inicial da tela
-      if (window.atualizarTela) {
-        window.atualizarTela();
-      }
+      atualizarTelaComDados(salaData);
     }
   }).catch(error => {
     console.error("Erro ao carregar dados iniciais da sala:", error);
@@ -78,17 +82,15 @@ export function iniciarSyncSala(codigoSala) {
     // Converte o objeto de jogadores para array
     window.jogadores = Object.entries(jogadoresData).map(([id, jogador]) => ({
       ...jogador,
-      id // Mantém o ID do Firebase para referência
+      id
     }));
     
     console.log("Jogadores atualizados:", window.jogadores);
     
-    // Força atualização imediata da lista de jogadores
+    // Força atualização imediata
     if (window.atualizarListaJogadores) {
       window.atualizarListaJogadores();
     }
-    
-    // Força atualização da tela
     if (window.atualizarTela) {
       window.atualizarTela();
     }

@@ -7,15 +7,6 @@ import { atualizarListaJogadores } from "./jogadores/adicionarJogador.js";
 import "./jogadores/removerJogador.js";
 import "./jogadores/selecionarAvatar.js";
 
-window.itensLoja = itensLoja; 
-window.jogadores = [];
-window.filtrosAtivos = ["todos"];
-window.filtroAtivo = "todos";
-window.MAX_JOGADORES = 6;
-window.draggedItem = null;
-window.getModo = getModo;
-window.atualizarListaJogadores = atualizarListaJogadores;
-
 // Função para pegar o código da sala da URL
 function getCodigoSala() {
     const params = new URLSearchParams(window.location.search);
@@ -28,7 +19,18 @@ function getModo() {
     return params.get('modo') || 'single';
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+// Função para inicializar a aplicação
+async function inicializarApp() {
+    // Inicializa variáveis globais
+    window.itensLoja = itensLoja;
+    window.jogadores = [];
+    window.filtrosAtivos = ["todos"];
+    window.filtroAtivo = "todos";
+    window.MAX_JOGADORES = 6;
+    window.draggedItem = null;
+    window.getModo = getModo;
+    window.atualizarListaJogadores = atualizarListaJogadores;
+
     // Exibe o código da sala no topo, se existir
     const codigoSala = getCodigoSala();
     if (codigoSala) {
@@ -49,11 +51,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Detecta modo e carrega multiplayer se necessário
     const modo = getModo();
     if (modo === 'multi') {
-        // Carrega sincronização multiplayer dinamicamente
-        const { iniciarSyncSala } = await import('./multiplayer/syncSala.js');
-        iniciarSyncSala(codigoSala);
+        try {
+            // Carrega sincronização multiplayer dinamicamente
+            const { iniciarSyncSala } = await import('./multiplayer/syncSala.js');
+            console.log("Iniciando sincronização multiplayer...");
+            iniciarSyncSala(codigoSala);
+            
+            // Força uma atualização inicial da tela
+            setTimeout(() => {
+                if (window.atualizarTela) {
+                    console.log("Forçando atualização inicial da tela...");
+                    window.atualizarTela();
+                }
+            }, 1000); // Aguarda 1 segundo para garantir que tudo foi carregado
+        } catch (error) {
+            console.error("Erro ao inicializar multiplayer:", error);
+        }
     }
 
+    // Configura os listeners
     configurarListeners();
-});
+}
+
+// Inicia a aplicação quando o DOM estiver pronto
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializarApp);
+} else {
+    inicializarApp();
+}
 
