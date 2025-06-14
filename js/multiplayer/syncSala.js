@@ -70,5 +70,44 @@ export function iniciarSyncSala(codigoSala) {
       }
     });
   };
+
+  // Sincroniza os créditos da sala
+  const creditosRef = ref(database, `salas/${codigoSala}/creditos`);
+  onValue(creditosRef, (snapshot) => {
+    const creditos = snapshot.val() || 0;
+    const creditosInput = document.getElementById('creditosInput');
+    if (creditosInput) {
+      creditosInput.value = creditos;
+      if (window.atualizarTela) {
+        window.atualizarTela();
+      }
+    }
+  });
+
+  // Adiciona listener para atualizar créditos
+  const creditosInput = document.getElementById('creditosInput');
+  if (creditosInput) {
+    creditosInput.addEventListener('change', () => {
+      const creditos = parseInt(creditosInput.value) || 0;
+      set(creditosRef, creditos);
+    });
+  }
+
+  // Sincroniza os filtros ativos
+  const filtrosRef = ref(database, `salas/${codigoSala}/filtros`);
+  onValue(filtrosRef, (snapshot) => {
+    const filtros = snapshot.val() || ["todos"];
+    window.filtrosAtivos = filtros;
+    window.filtroAtivo = filtros[0];
+    if (window.atualizarTela) {
+      window.atualizarTela();
+    }
+  });
+
+  // Adiciona listener para atualizar filtros
+  window.toggleFiltroMultiplayer = (filtro) => {
+    const novosFiltros = [filtro];
+    set(filtrosRef, novosFiltros);
+  };
 }
 

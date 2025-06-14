@@ -29,7 +29,15 @@ function getLojaPath() {
 criarBtn.onclick = async () => {
   const codigo = gerarCodigoSala();
   const salaRef = ref(database, 'salas/' + codigo);
-  await set(salaRef, { texto: "" });
+  
+  // Inicializa todos os dados necessários da sala
+  await set(salaRef, {
+    jogadores: {},
+    creditos: 0,
+    filtros: ["todos"],
+    criadoEm: new Date().toISOString()
+  });
+  
   window.location.href = `${getLojaPath()}?modo=multi&sala=${codigo}`;
 };
 
