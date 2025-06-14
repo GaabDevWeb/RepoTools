@@ -1,5 +1,5 @@
 import { database } from "./firebase.js";
-import { ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const salaInput = document.getElementById('sala-codigo');
 const entrarBtn = document.getElementById('entrar-sala');
@@ -35,7 +35,18 @@ criarBtn.onclick = async () => {
     jogadores: {},
     creditos: 0,
     filtros: ["todos"],
-    criadoEm: new Date().toISOString()
+    criadoEm: new Date().toISOString(),
+    criador: true // Marca que esta instância é o criador da sala
+  });
+  
+  // Adiciona listener para quando a aba for fechada
+  window.addEventListener('beforeunload', async () => {
+    try {
+      await remove(salaRef);
+      console.log("Sala removida com sucesso!");
+    } catch (error) {
+      console.error("Erro ao remover sala:", error);
+    }
   });
   
   window.location.href = `${getLojaPath()}?modo=multi&sala=${codigo}`;
