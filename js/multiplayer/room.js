@@ -1,4 +1,5 @@
-import "./firebase.js";
+import { database } from "./firebase.js";
+import { ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const salaInput = document.getElementById('sala-codigo');
 const entrarBtn = document.getElementById('entrar-sala');
@@ -27,16 +28,16 @@ function getLojaPath() {
 
 criarBtn.onclick = async () => {
   const codigo = gerarCodigoSala();
-  const salaRef = firebase.database().ref('salas/' + codigo);
-  await salaRef.set({ texto: "" });
+  const salaRef = ref(database, 'salas/' + codigo);
+  await set(salaRef, { texto: "" });
   window.location.href = `${getLojaPath()}?modo=multi&sala=${codigo}`;
 };
 
 entrarBtn.onclick = async () => {
   const salaId = salaInput.value.trim().toUpperCase();
   if (!salaId) return alert('Digite o código da sala!');
-  const salaRef = firebase.database().ref('salas/' + salaId);
-  const snapshot = await salaRef.once('value');
+  const salaRef = ref(database, 'salas/' + salaId);
+  const snapshot = await get(salaRef);
   if (!snapshot.exists()) {
     alert('Sala não encontrada!');
     return;

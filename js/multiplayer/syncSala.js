@@ -1,17 +1,17 @@
-import "./firebase.js";
+import { database } from "./firebase.js";
+import { ref, onValue, push, set, remove, update, child, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// Módulo de sincronização multiplayer (placeholder)
 export function iniciarSyncSala(codigoSala) {
   if (!codigoSala) return;
 
-  const salaRef = firebase.database().ref(`salas/${codigoSala}`);
-  const jogadoresRef = salaRef.child('jogadores');
+  const salaRef = ref(database, `salas/${codigoSala}`);
+  const jogadoresRef = ref(database, `salas/${codigoSala}/jogadores`);
   
   // Inicializa o objeto de jogadores no Firebase
   window.jogadoresObj = {};
   
   // Função para sincronizar jogadores
-  jogadoresRef.on('value', (snapshot) => {
+  onValue(jogadoresRef, (snapshot) => {
     const jogadoresData = snapshot.val() || {};
     window.jogadoresObj = jogadoresData;
     
@@ -26,26 +26,26 @@ export function iniciarSyncSala(codigoSala) {
 
   // Funções multiplayer
   window.adicionarJogadorMultiplayer = (novoJogador) => {
-    const novoJogadorRef = jogadoresRef.push();
-    novoJogadorRef.set(novoJogador);
+    const novoJogadorRef = push(jogadoresRef);
+    set(novoJogadorRef, novoJogador);
   };
 
   window.removerJogadorMultiplayer = (jogadorId) => {
-    jogadoresRef.child(jogadorId).remove();
+    remove(child(jogadoresRef, jogadorId));
   };
 
   window.atualizarNomeJogadorMultiplayer = (jogadorId, novoNome) => {
-    jogadoresRef.child(jogadorId).update({ nome: novoNome });
+    update(child(jogadoresRef, jogadorId), { nome: novoNome });
   };
 
   window.adicionarItemMultiplayer = (jogadorId, item) => {
-    const jogadorRef = jogadoresRef.child(jogadorId);
-    jogadorRef.once('value', (snapshot) => {
+    const jogadorRef = child(jogadoresRef, jogadorId);
+    get(jogadorRef).then((snapshot) => {
       const jogador = snapshot.val();
       const itens = jogador.itens || [];
       const total = jogador.total || 0;
       
-      jogadorRef.update({
+      update(jogadorRef, {
         itens: [...itens, item],
         total: total + item.preco
       });
@@ -53,8 +53,8 @@ export function iniciarSyncSala(codigoSala) {
   };
 
   window.removerItemMultiplayer = (jogadorId, itemKey) => {
-    const jogadorRef = jogadoresRef.child(jogadorId);
-    jogadorRef.once('value', (snapshot) => {
+    const jogadorRef = child(jogadoresRef, jogadorId);
+    get(jogadorRef).then((snapshot) => {
       const jogador = snapshot.val();
       const itens = jogador.itens || [];
       const item = itens[itemKey];
@@ -63,7 +63,7 @@ export function iniciarSyncSala(codigoSala) {
         const novosItens = [...itens];
         novosItens.splice(itemKey, 1);
         
-        jogadorRef.update({
+        update(jogadorRef, {
           itens: novosItens,
           total: jogador.total - item.preco
         });
