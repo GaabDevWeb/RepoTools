@@ -14,6 +14,7 @@ export function iniciarSyncSala(codigoSala) {
   
   // Inicializa o objeto de jogadores no Firebase
   window.jogadoresObj = {};
+  window.jogadores = [];
   
   // Função para sincronizar jogadores
   onValue(jogadoresRef, (snapshot) => {
@@ -22,7 +23,10 @@ export function iniciarSyncSala(codigoSala) {
     window.jogadoresObj = jogadoresData;
     
     // Converte o objeto de jogadores para array
-    window.jogadores = Object.values(jogadoresData);
+    window.jogadores = Object.entries(jogadoresData).map(([id, jogador]) => ({
+      ...jogador,
+      id // Mantém o ID do Firebase para referência
+    }));
     
     // Atualiza a tela
     if (window.atualizarTela) {

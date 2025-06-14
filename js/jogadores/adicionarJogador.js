@@ -68,15 +68,17 @@ export function adicionarItem(jogadorIndex, itemIndex) {
 
 export function atualizarListaJogadores() {
   const container = document.getElementById('lista-jogadores');
+  if (!container || !window.jogadores) return;
+
   container.innerHTML = window.jogadores.map((jogador, index) => `
-    <div class="card-jogador" data-index="${index}">
+    <div class="card-jogador" data-index="${index}" data-id="${jogador.id}">
       <img src="${jogador.foto.startsWith('data:') || jogador.foto.startsWith('blob:') ? 
            jogador.foto : 
            'images/avatars/' + jogador.foto}" 
            alt="${jogador.nome}" width="50">
       <input type="text" value="${jogador.nome}" onblur="atualizarNomeJogador(${index}, this.value)" />
       <div class="itens-jogador">
-        ${jogador.itens.map((item, itemIndex) => `
+        ${(jogador.itens || []).map((item, itemIndex) => `
           <div class="item-jogador">
             <div>${item.nome}</div>
             <div>

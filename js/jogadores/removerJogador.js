@@ -1,11 +1,12 @@
 import { atualizarTela } from "../loja/atualizarTela.js";
 
 export function removerJogador(index) {
-  if (confirm(`Remover ${window.jogadores[index].nome}?`)) {
+  const jogador = window.jogadores[index];
+  if (!jogador) return;
+
+  if (confirm(`Remover ${jogador.nome}?`)) {
     if (window.getModo && window.getModo() === 'multi' && window.removerJogadorMultiplayer) {
-      // Descubra o jogadorId (no Firebase, geralmente é a key, então adapte conforme necessário)
-      const jogadorId = Object.keys(window.jogadoresObj || {})[index];
-      window.removerJogadorMultiplayer(jogadorId);
+      window.removerJogadorMultiplayer(jogador.id);
     } else {
       window.jogadores.splice(index, 1);
       atualizarTela();
@@ -14,14 +15,15 @@ export function removerJogador(index) {
 }
 
 export function removerItem(jogadorIndex, itemIndex) {
+  const jogador = window.jogadores[jogadorIndex];
+  if (!jogador) return;
+
   if (window.getModo && window.getModo() === 'multi' && window.removerItemMultiplayer) {
-    const jogadorId = Object.keys(window.jogadoresObj || {})[jogadorIndex];
-    const itemKey = Object.keys(window.jogadores[jogadorIndex].itens || {})[itemIndex];
-    window.removerItemMultiplayer(jogadorId, itemKey);
+    window.removerItemMultiplayer(jogador.id, itemIndex);
   } else {
-    const item = window.jogadores[jogadorIndex].itens[itemIndex];
-    window.jogadores[jogadorIndex].total -= item.preco;
-    window.jogadores[jogadorIndex].itens.splice(itemIndex, 1);
+    const item = jogador.itens[itemIndex];
+    jogador.total -= item.preco;
+    jogador.itens.splice(itemIndex, 1);
     atualizarTela();
   }
 }
