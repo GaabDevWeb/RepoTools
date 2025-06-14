@@ -35,17 +35,20 @@ criarBtn.onclick = async () => {
     jogadores: {},
     creditos: 0,
     filtros: ["todos"],
-    criadoEm: new Date().toISOString(),
-    criador: true // Marca que esta instância é o criador da sala
+    criadoEm: new Date().toISOString()
   });
+
+  // Salva o código da sala no localStorage para identificar o criador
+  localStorage.setItem('sala_criador', codigo);
   
   // Adiciona listener para quando a aba for fechada
-  window.addEventListener('unload', async (event) => {
-    // Verifica se é realmente o criador da sala
-    const snapshot = await get(salaRef);
-    if (snapshot.exists() && snapshot.val().criador) {
+  window.addEventListener('beforeunload', async (event) => {
+    // Verifica se é o criador da sala
+    const salaCriador = localStorage.getItem('sala_criador');
+    if (salaCriador === codigo) {
       try {
         await remove(salaRef);
+        localStorage.removeItem('sala_criador');
         console.log("Sala removida com sucesso!");
       } catch (error) {
         console.error("Erro ao remover sala:", error);
