@@ -15,7 +15,7 @@ Exibir mensagens em ordem cronológica, identificando o remetente.
 Upload e Compartilhamento de Mapas/Imagens
 
 Mestre pode fazer upload de imagens (mapas, handouts).
-Todos na sala podem visualizar as imagens compartilhadas.
+Todos na sala podem visualizar as imagens compartilhadas
 2. Funcionalidades Importantes (Prioridade Média)
 Fichas de Personagem
 

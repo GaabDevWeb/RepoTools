@@ -1,4 +1,3 @@
-// Inicialização do Firebase (adicione suas configs)
 export const firebaseConfig = {
   apiKey: "AIzaSyDAm1-pfNQWwU0XkwMgWX49E3B98vdu_30",
   authDomain: "repotools.firebaseapp.com",
