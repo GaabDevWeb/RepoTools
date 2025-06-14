@@ -445,6 +445,7 @@ export function iniciarSyncSala(codigoSala) {
       let precoAlterado = false;
       Object.entries(itensData).forEach(([index, preco]) => {
         if (window.itensLoja[index] && window.itensLoja[index].preco !== preco) {
+          console.log(`Atualizando preço do item ${index} de ${window.itensLoja[index].preco} para ${preco}`);
           window.itensLoja[index].preco = preco;
           precoAlterado = true;
           
@@ -455,8 +456,14 @@ export function iniciarSyncSala(codigoSala) {
           }
         }
       });
-      if (precoAlterado && window.atualizarTela) {
-        window.atualizarTela();
+      if (precoAlterado) {
+        console.log("Preços atualizados, forçando atualização da tela");
+        if (window.atualizarTela) {
+          window.atualizarTela();
+        }
+        if (window.calcularResumoFinanceiro) {
+          window.calcularResumoFinanceiro();
+        }
       }
     }
   }, (error) => {
@@ -469,6 +476,8 @@ export function iniciarSyncSala(codigoSala) {
     
     // Atualiza temporariamente o preço localmente
     if (window.itensLoja[index]) {
+      const precoAntigo = window.itensLoja[index].preco;
+      console.log(`Alterando preço do item ${index} de ${precoAntigo} para ${novoPreco}`);
       window.itensLoja[index].preco = novoPreco;
       
       // Atualiza o input do preço
@@ -480,26 +489,34 @@ export function iniciarSyncSala(codigoSala) {
       if (window.atualizarTela) {
         window.atualizarTela();
       }
+      if (window.calcularResumoFinanceiro) {
+        window.calcularResumoFinanceiro();
+      }
     }
     
     update(child(itensRef, index), novoPreco)
       .then(() => {
-        console.log("Preço atualizado com sucesso!");
+        console.log("Preço atualizado com sucesso no Firebase!");
       })
       .catch(error => {
         console.error("Erro ao atualizar preço do item:", error);
         // Restaura o preço em caso de erro
         if (window.jogadoresObj && window.jogadoresObj.itens && window.jogadoresObj.itens[index]) {
-          window.itensLoja[index].preco = window.jogadoresObj.itens[index];
+          const precoAnterior = window.jogadoresObj.itens[index];
+          console.log(`Restaurando preço do item ${index} para ${precoAnterior}`);
+          window.itensLoja[index].preco = precoAnterior;
           
           // Restaura o input do preço
           const input = document.getElementById(`preco-item-${index}`);
           if (input) {
-            input.value = window.jogadoresObj.itens[index];
+            input.value = precoAnterior;
           }
           
           if (window.atualizarTela) {
             window.atualizarTela();
+          }
+          if (window.calcularResumoFinanceiro) {
+            window.calcularResumoFinanceiro();
           }
         }
       });

@@ -53,7 +53,7 @@ export function adicionarJogador() {
 }
 
 export function adicionarItem(jogadorIndex, itemIndex) {
-  const item = window.itensLoja[itemIndex];
+  const item = { ...window.itensLoja[itemIndex] }; // Cria uma cópia do item com o preço atualizado
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
   const jogador = window.jogadores[jogadorIndex];
 
@@ -67,6 +67,11 @@ export function adicionarItem(jogadorIndex, itemIndex) {
     jogador.itens = [];
   }
 
+  console.log("Adicionando item:", item);
+  console.log("Preço do item:", item.preco);
+  console.log("Total atual do jogador:", jogador.total);
+  console.log("Créditos disponíveis:", creditos);
+
   if (jogador.total + item.preco > creditos) {
     alert('Saldo insuficiente para este jogador!');
     return;
@@ -74,7 +79,7 @@ export function adicionarItem(jogadorIndex, itemIndex) {
 
   if (window.getModo && window.getModo() === 'multi' && window.adicionarItemMultiplayer) {
     // Adiciona temporariamente o item localmente para exibição imediata
-    jogador.itens.push({ ...item });
+    jogador.itens.push(item);
     jogador.total = (parseInt(jogador.total) || 0) + item.preco;
     atualizarListaJogadores();
     calcularResumoFinanceiro();
@@ -82,7 +87,7 @@ export function adicionarItem(jogadorIndex, itemIndex) {
     // Envia para o Firebase
     window.adicionarItemMultiplayer(jogador.id, item);
   } else {
-    jogador.itens.push({ ...item });
+    jogador.itens.push(item);
     jogador.total = (parseInt(jogador.total) || 0) + item.preco;
     atualizarTela();
     calcularResumoFinanceiro();
