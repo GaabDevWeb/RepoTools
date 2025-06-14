@@ -384,12 +384,14 @@ export function iniciarSyncSala(codigoSala) {
     console.log("Recebendo atualização de preços:", snapshot.val());
     const itensData = snapshot.val();
     if (itensData) {
+      let precoAlterado = false;
       Object.entries(itensData).forEach(([index, preco]) => {
-        if (window.itensLoja[index]) {
+        if (window.itensLoja[index] && window.itensLoja[index].preco !== preco) {
           window.itensLoja[index].preco = preco;
+          precoAlterado = true;
         }
       });
-      if (window.atualizarTela) {
+      if (precoAlterado && window.atualizarTela) {
         window.atualizarTela();
       }
     }

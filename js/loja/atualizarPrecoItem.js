@@ -13,12 +13,14 @@ export function atualizarPrecoItem(index) {
     return;
   }
 
+  // Atualiza o preço localmente primeiro para feedback instantâneo
+  window.itensLoja[index].preco = novoPreco;
+  if (window.atualizarTela) {
+    window.atualizarTela();
+  }
+
+  // Se estiver em modo multiplayer, sincroniza com outros jogadores
   if (window.getModo && window.getModo() === 'multi' && window.atualizarPrecoItemMultiplayer) {
     window.atualizarPrecoItemMultiplayer(index, novoPreco);
-  } else {
-    window.itensLoja[index].preco = novoPreco;
-    if (window.atualizarTela) {
-      window.atualizarTela();
-    }
   }
 }
