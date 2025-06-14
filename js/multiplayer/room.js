@@ -1,5 +1,5 @@
 import { database } from "./firebase.js";
-import { ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const salaInput = document.getElementById('sala-codigo');
 const entrarBtn = document.getElementById('entrar-sala');
@@ -36,34 +36,6 @@ criarBtn.onclick = async () => {
     creditos: 0,
     filtros: ["todos"],
     criadoEm: new Date().toISOString()
-  });
-
-  // Salva o código da sala no localStorage para identificar o criador
-  localStorage.setItem('sala_criador', codigo);
-  
-  // Variável para controlar se a aba está sendo fechada
-  let abaSendoFechada = false;
-  
-  // Listener para detectar quando a aba está sendo fechada
-  document.addEventListener('visibilitychange', async () => {
-    if (document.visibilityState === 'hidden') {
-      // Verifica se é o criador da sala
-      const salaCriador = localStorage.getItem('sala_criador');
-      if (salaCriador === codigo && abaSendoFechada) {
-        try {
-          await remove(salaRef);
-          localStorage.removeItem('sala_criador');
-          console.log("Sala removida com sucesso!");
-        } catch (error) {
-          console.error("Erro ao remover sala:", error);
-        }
-      }
-    }
-  });
-
-  // Listener para detectar quando a aba está prestes a ser fechada
-  window.addEventListener('beforeunload', () => {
-    abaSendoFechada = true;
   });
   
   window.location.href = `${getLojaPath()}?modo=multi&sala=${codigo}`;

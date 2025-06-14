@@ -12,29 +12,6 @@ export function iniciarSyncSala(codigoSala) {
   const salaRef = ref(database, `salas/${codigoSala}`);
   const jogadoresRef = ref(database, `salas/${codigoSala}/jogadores`);
   
-  // Verifica periodicamente se a sala ainda existe
-  const verificarSala = async () => {
-    try {
-      const snapshot = await get(salaRef);
-      if (!snapshot.exists()) {
-        console.log("Sala não existe mais, redirecionando...");
-        alert("A sala foi fechada pelo criador!");
-        window.location.href = window.location.origin + window.location.pathname.replace('loja.html', '');
-        return;
-      }
-    } catch (error) {
-      console.error("Erro ao verificar sala:", error);
-    }
-  };
-
-  // Verifica a cada 5 segundos
-  const intervaloVerificacao = setInterval(verificarSala, 5000);
-
-  // Limpa o intervalo quando a página for fechada
-  window.addEventListener('beforeunload', () => {
-    clearInterval(intervaloVerificacao);
-  });
-
   // Inicializa o objeto de jogadores no Firebase
   window.jogadoresObj = {};
   window.jogadores = [];
