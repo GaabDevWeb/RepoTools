@@ -109,5 +109,26 @@ export function iniciarSyncSala(codigoSala) {
     const novosFiltros = [filtro];
     set(filtrosRef, novosFiltros);
   };
+
+  // Sincroniza os preços dos itens
+  const itensRef = ref(database, `salas/${codigoSala}/itens`);
+  onValue(itensRef, (snapshot) => {
+    const itensData = snapshot.val();
+    if (itensData) {
+      Object.entries(itensData).forEach(([index, preco]) => {
+        if (window.itensLoja[index]) {
+          window.itensLoja[index].preco = preco;
+        }
+      });
+      if (window.atualizarTela) {
+        window.atualizarTela();
+      }
+    }
+  });
+
+  // Adiciona função para atualizar preço do item
+  window.atualizarPrecoItemMultiplayer = (index, novoPreco) => {
+    update(child(itensRef, index), novoPreco);
+  };
 }
 

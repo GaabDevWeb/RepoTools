@@ -13,5 +13,12 @@ export function atualizarPrecoItem(index) {
     return;
   }
 
-  window.itensLoja[index].preco = novoPreco;
+  if (window.getModo && window.getModo() === 'multi' && window.atualizarPrecoItemMultiplayer) {
+    window.atualizarPrecoItemMultiplayer(index, novoPreco);
+  } else {
+    window.itensLoja[index].preco = novoPreco;
+    if (window.atualizarTela) {
+      window.atualizarTela();
+    }
+  }
 }
