@@ -28,9 +28,13 @@ export function iniciarSyncSala(codigoSala) {
       id // Mantém o ID do Firebase para referência
     }));
     
-    // Atualiza a tela
+    // Força atualização imediata da tela
     if (window.atualizarTela) {
       window.atualizarTela();
+      // Força atualização do DOM
+      document.body.style.display = 'none';
+      document.body.offsetHeight; // Força reflow
+      document.body.style.display = '';
     }
   }, (error) => {
     console.error("Erro ao sincronizar jogadores:", error);
@@ -40,23 +44,47 @@ export function iniciarSyncSala(codigoSala) {
   window.adicionarJogadorMultiplayer = (novoJogador) => {
     console.log("Adicionando jogador:", novoJogador);
     const novoJogadorRef = push(jogadoresRef);
-    set(novoJogadorRef, novoJogador).catch(error => {
-      console.error("Erro ao adicionar jogador:", error);
-    });
+    set(novoJogadorRef, novoJogador)
+      .then(() => {
+        console.log("Jogador adicionado com sucesso!");
+        // Força atualização imediata
+        if (window.atualizarTela) {
+          window.atualizarTela();
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao adicionar jogador:", error);
+      });
   };
 
   window.removerJogadorMultiplayer = (jogadorId) => {
     console.log("Removendo jogador:", jogadorId);
-    remove(child(jogadoresRef, jogadorId)).catch(error => {
-      console.error("Erro ao remover jogador:", error);
-    });
+    remove(child(jogadoresRef, jogadorId))
+      .then(() => {
+        console.log("Jogador removido com sucesso!");
+        // Força atualização imediata
+        if (window.atualizarTela) {
+          window.atualizarTela();
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao remover jogador:", error);
+      });
   };
 
   window.atualizarNomeJogadorMultiplayer = (jogadorId, novoNome) => {
     console.log("Atualizando nome do jogador:", jogadorId, novoNome);
-    update(child(jogadoresRef, jogadorId), { nome: novoNome }).catch(error => {
-      console.error("Erro ao atualizar nome do jogador:", error);
-    });
+    update(child(jogadoresRef, jogadorId), { nome: novoNome })
+      .then(() => {
+        console.log("Nome atualizado com sucesso!");
+        // Força atualização imediata
+        if (window.atualizarTela) {
+          window.atualizarTela();
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao atualizar nome do jogador:", error);
+      });
   };
 
   window.adicionarItemMultiplayer = (jogadorId, item) => {
@@ -70,7 +98,15 @@ export function iniciarSyncSala(codigoSala) {
       update(jogadorRef, {
         itens: [...itens, item],
         total: total + item.preco
-      }).catch(error => {
+      })
+      .then(() => {
+        console.log("Item adicionado com sucesso!");
+        // Força atualização imediata
+        if (window.atualizarTela) {
+          window.atualizarTela();
+        }
+      })
+      .catch(error => {
         console.error("Erro ao adicionar item:", error);
       });
     }).catch(error => {
@@ -93,7 +129,15 @@ export function iniciarSyncSala(codigoSala) {
         update(jogadorRef, {
           itens: novosItens,
           total: jogador.total - item.preco
-        }).catch(error => {
+        })
+        .then(() => {
+          console.log("Item removido com sucesso!");
+          // Força atualização imediata
+          if (window.atualizarTela) {
+            window.atualizarTela();
+          }
+        })
+        .catch(error => {
           console.error("Erro ao remover item:", error);
         });
       }
@@ -110,6 +154,7 @@ export function iniciarSyncSala(codigoSala) {
     const creditosInput = document.getElementById('creditosInput');
     if (creditosInput) {
       creditosInput.value = creditos;
+      // Força atualização imediata
       if (window.atualizarTela) {
         window.atualizarTela();
       }
@@ -124,9 +169,17 @@ export function iniciarSyncSala(codigoSala) {
     creditosInput.addEventListener('change', () => {
       const creditos = parseInt(creditosInput.value) || 0;
       console.log("Atualizando créditos:", creditos);
-      set(creditosRef, creditos).catch(error => {
-        console.error("Erro ao atualizar créditos:", error);
-      });
+      set(creditosRef, creditos)
+        .then(() => {
+          console.log("Créditos atualizados com sucesso!");
+          // Força atualização imediata
+          if (window.atualizarTela) {
+            window.atualizarTela();
+          }
+        })
+        .catch(error => {
+          console.error("Erro ao atualizar créditos:", error);
+        });
     });
   }
 
@@ -137,6 +190,7 @@ export function iniciarSyncSala(codigoSala) {
     const filtros = snapshot.val() || ["todos"];
     window.filtrosAtivos = filtros;
     window.filtroAtivo = filtros[0];
+    // Força atualização imediata
     if (window.atualizarTela) {
       window.atualizarTela();
     }
@@ -148,9 +202,17 @@ export function iniciarSyncSala(codigoSala) {
   window.toggleFiltroMultiplayer = (filtro) => {
     console.log("Atualizando filtros:", filtro);
     const novosFiltros = [filtro];
-    set(filtrosRef, novosFiltros).catch(error => {
-      console.error("Erro ao atualizar filtros:", error);
-    });
+    set(filtrosRef, novosFiltros)
+      .then(() => {
+        console.log("Filtros atualizados com sucesso!");
+        // Força atualização imediata
+        if (window.atualizarTela) {
+          window.atualizarTela();
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao atualizar filtros:", error);
+      });
   };
 
   // Sincroniza os preços dos itens
@@ -164,6 +226,7 @@ export function iniciarSyncSala(codigoSala) {
           window.itensLoja[index].preco = preco;
         }
       });
+      // Força atualização imediata
       if (window.atualizarTela) {
         window.atualizarTela();
       }
@@ -175,9 +238,17 @@ export function iniciarSyncSala(codigoSala) {
   // Adiciona função para atualizar preço do item
   window.atualizarPrecoItemMultiplayer = (index, novoPreco) => {
     console.log("Atualizando preço do item:", index, novoPreco);
-    update(child(itensRef, index), novoPreco).catch(error => {
-      console.error("Erro ao atualizar preço do item:", error);
-    });
+    update(child(itensRef, index), novoPreco)
+      .then(() => {
+        console.log("Preço atualizado com sucesso!");
+        // Força atualização imediata
+        if (window.atualizarTela) {
+          window.atualizarTela();
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao atualizar preço do item:", error);
+      });
   };
 
   console.log("Sincronização iniciada com sucesso!");
