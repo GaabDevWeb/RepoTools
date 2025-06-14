@@ -53,7 +53,17 @@ export function adicionarJogador() {
 }
 
 export function adicionarItem(jogadorIndex, itemIndex) {
-  const item = { ...window.itensLoja[itemIndex] }; // Cria uma cópia do item com o preço atualizado
+  console.log("Adicionando item:", itemIndex);
+  console.log("Item na loja:", window.itensLoja[itemIndex]);
+  
+  // Cria uma cópia do item com o preço atualizado
+  const item = {
+    ...window.itensLoja[itemIndex],
+    indexOriginal: itemIndex // Adiciona o índice original para referência
+  };
+  
+  console.log("Item copiado:", item);
+  
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
   const jogador = window.jogadores[jogadorIndex];
 

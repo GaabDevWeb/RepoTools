@@ -46,9 +46,17 @@ export function iniciarSyncSala(codigoSala) {
 
     // Inicializa os preços dos itens
     if (salaData.itens) {
+      console.log("Inicializando preços dos itens:", salaData.itens);
       Object.entries(salaData.itens).forEach(([index, preco]) => {
         if (window.itensLoja[index]) {
+          console.log(`Item ${index}: ${window.itensLoja[index].preco} -> ${preco}`);
           window.itensLoja[index].preco = preco;
+          
+          // Atualiza o input do preço
+          const input = document.getElementById(`preco-item-${index}`);
+          if (input) {
+            input.value = preco;
+          }
         }
       });
     }
@@ -59,6 +67,9 @@ export function iniciarSyncSala(codigoSala) {
     }
     if (window.atualizarTela) {
       window.atualizarTela();
+    }
+    if (window.calcularResumoFinanceiro) {
+      window.calcularResumoFinanceiro();
     }
   }
 
@@ -464,6 +475,9 @@ export function iniciarSyncSala(codigoSala) {
         if (window.calcularResumoFinanceiro) {
           window.calcularResumoFinanceiro();
         }
+        if (window.atualizarListaJogadores) {
+          window.atualizarListaJogadores();
+        }
       }
     }
   }, (error) => {
@@ -486,11 +500,25 @@ export function iniciarSyncSala(codigoSala) {
         input.value = novoPreco;
       }
       
+      // Atualiza todos os itens existentes com o novo preço
+      window.jogadores.forEach(jogador => {
+        if (jogador.itens) {
+          jogador.itens.forEach(item => {
+            if (item.indexOriginal === parseInt(index)) {
+              item.preco = novoPreco;
+            }
+          });
+        }
+      });
+      
       if (window.atualizarTela) {
         window.atualizarTela();
       }
       if (window.calcularResumoFinanceiro) {
         window.calcularResumoFinanceiro();
+      }
+      if (window.atualizarListaJogadores) {
+        window.atualizarListaJogadores();
       }
     }
     
@@ -512,11 +540,25 @@ export function iniciarSyncSala(codigoSala) {
             input.value = precoAnterior;
           }
           
+          // Restaura os preços dos itens existentes
+          window.jogadores.forEach(jogador => {
+            if (jogador.itens) {
+              jogador.itens.forEach(item => {
+                if (item.indexOriginal === parseInt(index)) {
+                  item.preco = precoAnterior;
+                }
+              });
+            }
+          });
+          
           if (window.atualizarTela) {
             window.atualizarTela();
           }
           if (window.calcularResumoFinanceiro) {
             window.calcularResumoFinanceiro();
+          }
+          if (window.atualizarListaJogadores) {
+            window.atualizarListaJogadores();
           }
         }
       });
