@@ -447,6 +447,12 @@ export function iniciarSyncSala(codigoSala) {
         if (window.itensLoja[index] && window.itensLoja[index].preco !== preco) {
           window.itensLoja[index].preco = preco;
           precoAlterado = true;
+          
+          // Atualiza o input do preço
+          const input = document.getElementById(`preco-item-${index}`);
+          if (input) {
+            input.value = preco;
+          }
         }
       });
       if (precoAlterado && window.atualizarTela) {
@@ -464,6 +470,13 @@ export function iniciarSyncSala(codigoSala) {
     // Atualiza temporariamente o preço localmente
     if (window.itensLoja[index]) {
       window.itensLoja[index].preco = novoPreco;
+      
+      // Atualiza o input do preço
+      const input = document.getElementById(`preco-item-${index}`);
+      if (input) {
+        input.value = novoPreco;
+      }
+      
       if (window.atualizarTela) {
         window.atualizarTela();
       }
@@ -478,6 +491,13 @@ export function iniciarSyncSala(codigoSala) {
         // Restaura o preço em caso de erro
         if (window.jogadoresObj && window.jogadoresObj.itens && window.jogadoresObj.itens[index]) {
           window.itensLoja[index].preco = window.jogadoresObj.itens[index];
+          
+          // Restaura o input do preço
+          const input = document.getElementById(`preco-item-${index}`);
+          if (input) {
+            input.value = window.jogadoresObj.itens[index];
+          }
+          
           if (window.atualizarTela) {
             window.atualizarTela();
           }
