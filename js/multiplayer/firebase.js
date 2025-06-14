@@ -13,8 +13,16 @@ export const firebaseConfig = {
 };
 
 // Inicializa o Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+let app;
+let database;
+
+try {
+  app = initializeApp(firebaseConfig);
+  database = getDatabase(app);
+  console.log("Firebase inicializado com sucesso!");
+} catch (error) {
+  console.error("Erro ao inicializar Firebase:", error);
+}
 
 // Exporta o database para uso em outros arquivos
 export { database };
