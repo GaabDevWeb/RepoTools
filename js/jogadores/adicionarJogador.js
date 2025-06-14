@@ -55,14 +55,24 @@ export function adicionarJogador() {
 export function adicionarItem(jogadorIndex, itemIndex) {
   const item = window.itensLoja[itemIndex];
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
+  const jogador = window.jogadores[jogadorIndex];
 
-  if (window.jogadores[jogadorIndex].total + item.preco > creditos) {
+  if (!jogador) {
+    console.error("Jogador não encontrado:", jogadorIndex);
+    return;
+  }
+
+  // Garante que o jogador tem um array de itens
+  if (!jogador.itens) {
+    jogador.itens = [];
+  }
+
+  if (jogador.total + item.preco > creditos) {
     alert('Saldo insuficiente para este jogador!');
     return;
   }
 
   if (window.getModo && window.getModo() === 'multi' && window.adicionarItemMultiplayer) {
-    const jogador = window.jogadores[jogadorIndex];
     // Adiciona temporariamente o item localmente para exibição imediata
     jogador.itens.push({ ...item });
     jogador.total += item.preco;
@@ -71,8 +81,8 @@ export function adicionarItem(jogadorIndex, itemIndex) {
     // Envia para o Firebase
     window.adicionarItemMultiplayer(jogador.id, item);
   } else {
-    window.jogadores[jogadorIndex].itens.push({ ...item });
-    window.jogadores[jogadorIndex].total += item.preco;
+    jogador.itens.push({ ...item });
+    jogador.total += item.preco;
     atualizarTela();
   }
 }
@@ -114,7 +124,7 @@ export function atualizarListaJogadores() {
 
 export function calcularResumoFinanceiro() {
   const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
-  const totalGasto = window.jogadores.reduce((total, j) => total + j.total, 0);
+  const totalGasto = window.jogadores.reduce((total, j) => total + (j.total || 0), 0);
   const saldoRestante = creditos - totalGasto;
 
   document.getElementById("total-gasto").textContent = `$${totalGasto.toLocaleString()}`;
