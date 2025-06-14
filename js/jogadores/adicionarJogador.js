@@ -36,6 +36,12 @@ export function adicionarJogador() {
   };
 
   if (window.getModo && window.getModo() === 'multi' && window.adicionarJogadorMultiplayer) {
+    // Adiciona temporariamente o jogador localmente para exibição imediata
+    const tempId = 'temp_' + Date.now();
+    window.jogadores.push({ ...novoJogador, id: tempId });
+    atualizarListaJogadores();
+    
+    // Envia para o Firebase
     window.adicionarJogadorMultiplayer(novoJogador);
   } else {
     window.jogadores.push(novoJogador);
@@ -56,9 +62,14 @@ export function adicionarItem(jogadorIndex, itemIndex) {
   }
 
   if (window.getModo && window.getModo() === 'multi' && window.adicionarItemMultiplayer) {
-    // Descubra o jogadorId (veja nota acima)
-    const jogadorId = Object.keys(window.jogadoresObj || {})[jogadorIndex];
-    window.adicionarItemMultiplayer(jogadorId, item);
+    const jogador = window.jogadores[jogadorIndex];
+    // Adiciona temporariamente o item localmente para exibição imediata
+    jogador.itens.push({ ...item });
+    jogador.total += item.preco;
+    atualizarListaJogadores();
+    
+    // Envia para o Firebase
+    window.adicionarItemMultiplayer(jogador.id, item);
   } else {
     window.jogadores[jogadorIndex].itens.push({ ...item });
     window.jogadores[jogadorIndex].total += item.preco;
@@ -69,6 +80,8 @@ export function adicionarItem(jogadorIndex, itemIndex) {
 export function atualizarListaJogadores() {
   const container = document.getElementById('lista-jogadores');
   if (!container || !window.jogadores) return;
+
+  console.log("Atualizando lista de jogadores:", window.jogadores);
 
   container.innerHTML = window.jogadores.map((jogador, index) => `
     <div class="card-jogador" data-index="${index}" data-id="${jogador.id}">
@@ -92,6 +105,11 @@ export function atualizarListaJogadores() {
       <button onclick="removerJogador(${index})"><i class="fa-solid fa-user-minus"></i> Remover</button>
     </div>
   `).join('');
+
+  // Força atualização do DOM
+  container.style.display = 'none';
+  container.offsetHeight; // Força reflow
+  container.style.display = '';
 }
 
 export function calcularResumoFinanceiro() {
