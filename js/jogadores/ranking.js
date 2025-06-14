@@ -1,6 +1,19 @@
 export function atualizarRankingJogadores() {
+  console.log("Atualizando ranking de jogadores...");
   const rankingDiv = document.getElementById('ranking-jogadores');
-  const ordenados = [...window.jogadores].sort((a, b) => b.total - a.total);
+  if (!rankingDiv) {
+    console.error("Elemento ranking-jogadores não encontrado!");
+    return;
+  }
+
+  // Ordena os jogadores por total gasto
+  const ordenados = [...window.jogadores].sort((a, b) => {
+    const totalA = parseInt(a.total) || 0;
+    const totalB = parseInt(b.total) || 0;
+    return totalB - totalA;
+  });
+
+  console.log("Jogadores ordenados:", ordenados);
 
   const medalhas = [
     '<span class="medalha medalha-ouro"><i class="fa-solid fa-crown"></i></span>',
@@ -17,6 +30,7 @@ export function atualizarRankingJogadores() {
   let podioHtml = '';
   for (let i = 0; i < 3; i++) {
     const jogador = ordenados[i];
+    const total = jogador ? parseInt(jogador.total) || 0 : 0;
     podioHtml += `
       <div class="ranking-top" style="color:${i === 0 ? 'var(--accent)' : i === 1 ? 'silver' : '#cd7f32'}">
         ${medalhas[i] || ''}
@@ -24,7 +38,7 @@ export function atualizarRankingJogadores() {
           <strong>${jogador ? jogador.nome : '-'}</strong>
           <span class="titulo-podio">${jogador ? titulos[i] : ''}</span>
         </span>
-        <span class="valor-gasto">${jogador ? '$' + jogador.total.toLocaleString() : '-'}</span>
+        <span class="valor-gasto">${jogador ? '$' + total.toLocaleString() : '-'}</span>
       </div>
     `;
   }
@@ -37,4 +51,18 @@ export function atualizarRankingJogadores() {
       </div>
     </div>
   `;
+
+  // Adiciona evento de clique para mostrar/esconder o ranking
+  const rankingIcone = document.getElementById('ranking-icone');
+  if (rankingIcone) {
+    rankingIcone.onclick = () => {
+      rankingDiv.style.display = rankingDiv.style.display === 'none' ? 'block' : 'none';
+    };
+  }
+
+  // Esconde o ranking inicialmente
+  rankingDiv.style.display = 'none';
 }
+
+// Adiciona a função ao objeto window para acesso global
+window.atualizarRankingJogadores = atualizarRankingJogadores;

@@ -94,6 +94,9 @@ export function iniciarSyncSala(codigoSala) {
     if (window.calcularResumoFinanceiro) {
       window.calcularResumoFinanceiro();
     }
+    if (window.atualizarRankingJogadores) {
+      window.atualizarRankingJogadores();
+    }
     if (window.atualizarTela) {
       window.atualizarTela();
     }
@@ -115,6 +118,9 @@ export function iniciarSyncSala(codigoSala) {
     if (window.calcularResumoFinanceiro) {
       window.calcularResumoFinanceiro();
     }
+    if (window.atualizarRankingJogadores) {
+      window.atualizarRankingJogadores();
+    }
     
     set(novoJogadorRef, novoJogador)
       .then(() => {
@@ -133,6 +139,9 @@ export function iniciarSyncSala(codigoSala) {
         if (window.calcularResumoFinanceiro) {
           window.calcularResumoFinanceiro();
         }
+        if (window.atualizarRankingJogadores) {
+          window.atualizarRankingJogadores();
+        }
       });
   };
 
@@ -148,6 +157,9 @@ export function iniciarSyncSala(codigoSala) {
       }
       if (window.calcularResumoFinanceiro) {
         window.calcularResumoFinanceiro();
+      }
+      if (window.atualizarRankingJogadores) {
+        window.atualizarRankingJogadores();
       }
     }
     
@@ -168,6 +180,9 @@ export function iniciarSyncSala(codigoSala) {
           }
           if (window.calcularResumoFinanceiro) {
             window.calcularResumoFinanceiro();
+          }
+          if (window.atualizarRankingJogadores) {
+            window.atualizarRankingJogadores();
           }
         }
       });
@@ -215,12 +230,15 @@ export function iniciarSyncSala(codigoSala) {
     if (jogador) {
       jogador.itens = jogador.itens || [];
       jogador.itens.push({ ...item });
-      jogador.total = (jogador.total || 0) + item.preco;
+      jogador.total = (parseInt(jogador.total) || 0) + item.preco;
       if (window.atualizarListaJogadores) {
         window.atualizarListaJogadores();
       }
       if (window.calcularResumoFinanceiro) {
         window.calcularResumoFinanceiro();
+      }
+      if (window.atualizarRankingJogadores) {
+        window.atualizarRankingJogadores();
       }
     }
     
@@ -251,6 +269,9 @@ export function iniciarSyncSala(codigoSala) {
           }
           if (window.calcularResumoFinanceiro) {
             window.calcularResumoFinanceiro();
+          }
+          if (window.atualizarRankingJogadores) {
+            window.atualizarRankingJogadores();
           }
         }
       });
