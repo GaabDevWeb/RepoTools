@@ -123,19 +123,46 @@ export function atualizarListaJogadores() {
 }
 
 export function calcularResumoFinanceiro() {
-  const creditos = parseInt(document.getElementById("creditosInput").value) || 0;
-  const totalGasto = window.jogadores.reduce((total, j) => total + (j.total || 0), 0);
+  console.log("Calculando resumo financeiro...");
+  console.log("Jogadores:", window.jogadores);
+  
+  const creditos = parseInt(document.getElementById("creditosInput")?.value) || 0;
+  const totalGasto = window.jogadores.reduce((total, j) => {
+    console.log("Jogador:", j.nome, "Total:", j.total);
+    return total + (parseInt(j.total) || 0);
+  }, 0);
+  
+  console.log("Total gasto:", totalGasto);
+  console.log("Créditos:", creditos);
+  
   const saldoRestante = creditos - totalGasto;
 
-  document.getElementById("total-gasto").textContent = `$${totalGasto.toLocaleString()}`;
-  document.getElementById("saldo-restante").textContent = `$${saldoRestante.toLocaleString()}`;
+  const totalGastoElement = document.getElementById("total-gasto");
+  const saldoRestanteElement = document.getElementById("saldo-restante");
+  
+  if (totalGastoElement) {
+    totalGastoElement.textContent = `$${totalGasto.toLocaleString()}`;
+    console.log("Total gasto atualizado:", totalGastoElement.textContent);
+  } else {
+    console.error("Elemento total-gasto não encontrado!");
+  }
+  
+  if (saldoRestanteElement) {
+    saldoRestanteElement.textContent = `$${saldoRestante.toLocaleString()}`;
+    console.log("Saldo restante atualizado:", saldoRestanteElement.textContent);
+  } else {
+    console.error("Elemento saldo-restante não encontrado!");
+  }
 
   const barra = document.getElementById("progresso-preenchido");
-  let porcentagem = 0;
-  if (creditos > 0) {
-    porcentagem = Math.min(100, Math.round((totalGasto / creditos) * 100));
-  }
   if (barra) {
+    let porcentagem = 0;
+    if (creditos > 0) {
+      porcentagem = Math.min(100, Math.round((totalGasto / creditos) * 100));
+    }
     barra.style.width = porcentagem + "%";
+    console.log("Porcentagem da barra:", porcentagem);
+  } else {
+    console.error("Elemento progresso-preenchido não encontrado!");
   }
 }
