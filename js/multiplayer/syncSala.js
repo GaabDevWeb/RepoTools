@@ -91,6 +91,9 @@ export function iniciarSyncSala(codigoSala) {
     if (window.atualizarListaJogadores) {
       window.atualizarListaJogadores();
     }
+    if (window.calcularResumoFinanceiro) {
+      window.calcularResumoFinanceiro();
+    }
     if (window.atualizarTela) {
       window.atualizarTela();
     }
@@ -109,6 +112,9 @@ export function iniciarSyncSala(codigoSala) {
     if (window.atualizarListaJogadores) {
       window.atualizarListaJogadores();
     }
+    if (window.calcularResumoFinanceiro) {
+      window.calcularResumoFinanceiro();
+    }
     
     set(novoJogadorRef, novoJogador)
       .then(() => {
@@ -124,6 +130,9 @@ export function iniciarSyncSala(codigoSala) {
         if (window.atualizarListaJogadores) {
           window.atualizarListaJogadores();
         }
+        if (window.calcularResumoFinanceiro) {
+          window.calcularResumoFinanceiro();
+        }
       });
   };
 
@@ -136,6 +145,9 @@ export function iniciarSyncSala(codigoSala) {
       window.jogadores.splice(jogadorIndex, 1);
       if (window.atualizarListaJogadores) {
         window.atualizarListaJogadores();
+      }
+      if (window.calcularResumoFinanceiro) {
+        window.calcularResumoFinanceiro();
       }
     }
     
@@ -153,6 +165,9 @@ export function iniciarSyncSala(codigoSala) {
           window.jogadores.push({ ...window.jogadoresObj[jogadorId], id: jogadorId });
           if (window.atualizarListaJogadores) {
             window.atualizarListaJogadores();
+          }
+          if (window.calcularResumoFinanceiro) {
+            window.calcularResumoFinanceiro();
           }
         }
       });
@@ -204,6 +219,9 @@ export function iniciarSyncSala(codigoSala) {
       if (window.atualizarListaJogadores) {
         window.atualizarListaJogadores();
       }
+      if (window.calcularResumoFinanceiro) {
+        window.calcularResumoFinanceiro();
+      }
     }
     
     const jogadorRef = child(jogadoresRef, jogadorId);
@@ -231,6 +249,9 @@ export function iniciarSyncSala(codigoSala) {
           if (window.atualizarListaJogadores) {
             window.atualizarListaJogadores();
           }
+          if (window.calcularResumoFinanceiro) {
+            window.calcularResumoFinanceiro();
+          }
         }
       });
     }).catch(error => {
@@ -249,6 +270,9 @@ export function iniciarSyncSala(codigoSala) {
       jogador.total -= item.preco;
       if (window.atualizarListaJogadores) {
         window.atualizarListaJogadores();
+      }
+      if (window.calcularResumoFinanceiro) {
+        window.calcularResumoFinanceiro();
       }
     }
     
@@ -281,6 +305,9 @@ export function iniciarSyncSala(codigoSala) {
             if (window.atualizarListaJogadores) {
               window.atualizarListaJogadores();
             }
+            if (window.calcularResumoFinanceiro) {
+              window.calcularResumoFinanceiro();
+            }
           }
         });
       }
@@ -297,6 +324,10 @@ export function iniciarSyncSala(codigoSala) {
     const creditosInput = document.getElementById('creditosInput');
     if (creditosInput) {
       creditosInput.value = creditos;
+      // Força atualização do resumo financeiro
+      if (window.calcularResumoFinanceiro) {
+        window.calcularResumoFinanceiro();
+      }
       if (window.atualizarTela) {
         window.atualizarTela();
       }
@@ -313,6 +344,9 @@ export function iniciarSyncSala(codigoSala) {
       console.log("Atualizando créditos:", creditos);
       
       // Atualiza temporariamente os créditos localmente
+      if (window.calcularResumoFinanceiro) {
+        window.calcularResumoFinanceiro();
+      }
       if (window.atualizarTela) {
         window.atualizarTela();
       }
@@ -327,6 +361,9 @@ export function iniciarSyncSala(codigoSala) {
           if (window.jogadoresObj) {
             const creditosAnteriores = window.jogadoresObj.creditos || 0;
             creditosInput.value = creditosAnteriores;
+            if (window.calcularResumoFinanceiro) {
+              window.calcularResumoFinanceiro();
+            }
             if (window.atualizarTela) {
               window.atualizarTela();
             }

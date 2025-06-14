@@ -3,7 +3,7 @@ import { configurarListeners } from "./eventos/listeners.js";
 import { toggleFavorito } from "./loja/toggleFavorito.js";
 import { atualizarPrecoItem } from "./loja/atualizarPrecoItem.js";
 import { toggleFiltro } from "./loja/toggleFiltro.js";
-import { atualizarListaJogadores } from "./jogadores/adicionarJogador.js";
+import { atualizarListaJogadores, calcularResumoFinanceiro } from "./jogadores/adicionarJogador.js";
 import "./jogadores/removerJogador.js";
 import "./jogadores/selecionarAvatar.js";
 
@@ -30,6 +30,7 @@ async function inicializarApp() {
     window.draggedItem = null;
     window.getModo = getModo;
     window.atualizarListaJogadores = atualizarListaJogadores;
+    window.calcularResumoFinanceiro = calcularResumoFinanceiro;
 
     // Exibe o código da sala no topo, se existir
     const codigoSala = getCodigoSala();
