@@ -40,12 +40,16 @@ criarBtn.onclick = async () => {
   });
   
   // Adiciona listener para quando a aba for fechada
-  window.addEventListener('beforeunload', async () => {
-    try {
-      await remove(salaRef);
-      console.log("Sala removida com sucesso!");
-    } catch (error) {
-      console.error("Erro ao remover sala:", error);
+  window.addEventListener('unload', async (event) => {
+    // Verifica se é realmente o criador da sala
+    const snapshot = await get(salaRef);
+    if (snapshot.exists() && snapshot.val().criador) {
+      try {
+        await remove(salaRef);
+        console.log("Sala removida com sucesso!");
+      } catch (error) {
+        console.error("Erro ao remover sala:", error);
+      }
     }
   });
   
