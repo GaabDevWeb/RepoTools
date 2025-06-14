@@ -41,19 +41,29 @@ criarBtn.onclick = async () => {
   // Salva o código da sala no localStorage para identificar o criador
   localStorage.setItem('sala_criador', codigo);
   
-  // Adiciona listener para quando a aba for fechada
-  window.addEventListener('beforeunload', async (event) => {
-    // Verifica se é o criador da sala
-    const salaCriador = localStorage.getItem('sala_criador');
-    if (salaCriador === codigo) {
-      try {
-        await remove(salaRef);
-        localStorage.removeItem('sala_criador');
-        console.log("Sala removida com sucesso!");
-      } catch (error) {
-        console.error("Erro ao remover sala:", error);
+  // Variável para controlar se a aba está sendo fechada
+  let abaSendoFechada = false;
+  
+  // Listener para detectar quando a aba está sendo fechada
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'hidden') {
+      // Verifica se é o criador da sala
+      const salaCriador = localStorage.getItem('sala_criador');
+      if (salaCriador === codigo && abaSendoFechada) {
+        try {
+          await remove(salaRef);
+          localStorage.removeItem('sala_criador');
+          console.log("Sala removida com sucesso!");
+        } catch (error) {
+          console.error("Erro ao remover sala:", error);
+        }
       }
     }
+  });
+
+  // Listener para detectar quando a aba está prestes a ser fechada
+  window.addEventListener('beforeunload', () => {
+    abaSendoFechada = true;
   });
   
   window.location.href = `${getLojaPath()}?modo=multi&sala=${codigo}`;
