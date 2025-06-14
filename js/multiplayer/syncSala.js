@@ -30,6 +30,11 @@ export function iniciarSyncSala(codigoSala) {
           id
         }));
         console.log("Jogadores iniciais carregados:", window.jogadores);
+        
+        // Força atualização imediata da lista de jogadores
+        if (window.atualizarListaJogadores) {
+          window.atualizarListaJogadores();
+        }
       }
 
       // Inicializa os créditos
@@ -78,7 +83,12 @@ export function iniciarSyncSala(codigoSala) {
     
     console.log("Jogadores atualizados:", window.jogadores);
     
-    // Força atualização imediata da tela
+    // Força atualização imediata da lista de jogadores
+    if (window.atualizarListaJogadores) {
+      window.atualizarListaJogadores();
+    }
+    
+    // Força atualização da tela
     if (window.atualizarTela) {
       window.atualizarTela();
     }
@@ -94,6 +104,9 @@ export function iniciarSyncSala(codigoSala) {
       .then(() => {
         console.log("Jogador adicionado com sucesso!");
         // Força atualização imediata
+        if (window.atualizarListaJogadores) {
+          window.atualizarListaJogadores();
+        }
         if (window.atualizarTela) {
           window.atualizarTela();
         }
@@ -109,6 +122,9 @@ export function iniciarSyncSala(codigoSala) {
       .then(() => {
         console.log("Jogador removido com sucesso!");
         // Força atualização imediata
+        if (window.atualizarListaJogadores) {
+          window.atualizarListaJogadores();
+        }
         if (window.atualizarTela) {
           window.atualizarTela();
         }
@@ -124,6 +140,9 @@ export function iniciarSyncSala(codigoSala) {
       .then(() => {
         console.log("Nome atualizado com sucesso!");
         // Força atualização imediata
+        if (window.atualizarListaJogadores) {
+          window.atualizarListaJogadores();
+        }
         if (window.atualizarTela) {
           window.atualizarTela();
         }
@@ -148,6 +167,9 @@ export function iniciarSyncSala(codigoSala) {
       .then(() => {
         console.log("Item adicionado com sucesso!");
         // Força atualização imediata
+        if (window.atualizarListaJogadores) {
+          window.atualizarListaJogadores();
+        }
         if (window.atualizarTela) {
           window.atualizarTela();
         }
@@ -179,6 +201,9 @@ export function iniciarSyncSala(codigoSala) {
         .then(() => {
           console.log("Item removido com sucesso!");
           // Força atualização imediata
+          if (window.atualizarListaJogadores) {
+            window.atualizarListaJogadores();
+          }
           if (window.atualizarTela) {
             window.atualizarTela();
           }

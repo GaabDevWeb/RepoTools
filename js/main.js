@@ -3,6 +3,7 @@ import { configurarListeners } from "./eventos/listeners.js";
 import { toggleFavorito } from "./loja/toggleFavorito.js";
 import { atualizarPrecoItem } from "./loja/atualizarPrecoItem.js";
 import { toggleFiltro } from "./loja/toggleFiltro.js";
+import { atualizarListaJogadores } from "./jogadores/adicionarJogador.js";
 import "./jogadores/removerJogador.js";
 import "./jogadores/selecionarAvatar.js";
 
@@ -13,6 +14,7 @@ window.filtroAtivo = "todos";
 window.MAX_JOGADORES = 6;
 window.draggedItem = null;
 window.getModo = getModo;
+window.atualizarListaJogadores = atualizarListaJogadores;
 
 // Função para pegar o código da sala da URL
 function getCodigoSala() {
