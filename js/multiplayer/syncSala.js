@@ -15,6 +15,54 @@ export function iniciarSyncSala(codigoSala) {
   // Inicializa o objeto de jogadores no Firebase
   window.jogadoresObj = {};
   window.jogadores = [];
+
+  // Carrega os dados iniciais da sala
+  get(salaRef).then((snapshot) => {
+    const salaData = snapshot.val();
+    if (salaData) {
+      console.log("Dados da sala carregados:", salaData);
+      
+      // Inicializa os jogadores
+      if (salaData.jogadores) {
+        window.jogadoresObj = salaData.jogadores;
+        window.jogadores = Object.entries(salaData.jogadores).map(([id, jogador]) => ({
+          ...jogador,
+          id
+        }));
+        console.log("Jogadores iniciais carregados:", window.jogadores);
+      }
+
+      // Inicializa os créditos
+      if (salaData.creditos !== undefined) {
+        const creditosInput = document.getElementById('creditosInput');
+        if (creditosInput) {
+          creditosInput.value = salaData.creditos;
+        }
+      }
+
+      // Inicializa os filtros
+      if (salaData.filtros) {
+        window.filtrosAtivos = salaData.filtros;
+        window.filtroAtivo = salaData.filtros[0];
+      }
+
+      // Inicializa os preços dos itens
+      if (salaData.itens) {
+        Object.entries(salaData.itens).forEach(([index, preco]) => {
+          if (window.itensLoja[index]) {
+            window.itensLoja[index].preco = preco;
+          }
+        });
+      }
+
+      // Força atualização inicial da tela
+      if (window.atualizarTela) {
+        window.atualizarTela();
+      }
+    }
+  }).catch(error => {
+    console.error("Erro ao carregar dados iniciais da sala:", error);
+  });
   
   // Função para sincronizar jogadores
   onValue(jogadoresRef, (snapshot) => {
@@ -28,13 +76,11 @@ export function iniciarSyncSala(codigoSala) {
       id // Mantém o ID do Firebase para referência
     }));
     
+    console.log("Jogadores atualizados:", window.jogadores);
+    
     // Força atualização imediata da tela
     if (window.atualizarTela) {
       window.atualizarTela();
-      // Força atualização do DOM
-      document.body.style.display = 'none';
-      document.body.offsetHeight; // Força reflow
-      document.body.style.display = '';
     }
   }, (error) => {
     console.error("Erro ao sincronizar jogadores:", error);
