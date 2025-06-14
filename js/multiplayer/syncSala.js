@@ -102,60 +102,110 @@ export function iniciarSyncSala(codigoSala) {
   window.adicionarJogadorMultiplayer = (novoJogador) => {
     console.log("Adicionando jogador:", novoJogador);
     const novoJogadorRef = push(jogadoresRef);
+    const tempId = novoJogadorRef.key;
+    
+    // Adiciona temporariamente o jogador localmente
+    window.jogadores.push({ ...novoJogador, id: tempId });
+    if (window.atualizarListaJogadores) {
+      window.atualizarListaJogadores();
+    }
+    
     set(novoJogadorRef, novoJogador)
       .then(() => {
         console.log("Jogador adicionado com sucesso!");
-        // Força atualização imediata
-        if (window.atualizarListaJogadores) {
-          window.atualizarListaJogadores();
-        }
         if (window.atualizarTela) {
           window.atualizarTela();
         }
       })
       .catch(error => {
         console.error("Erro ao adicionar jogador:", error);
+        // Remove o jogador temporário em caso de erro
+        window.jogadores = window.jogadores.filter(j => j.id !== tempId);
+        if (window.atualizarListaJogadores) {
+          window.atualizarListaJogadores();
+        }
       });
   };
 
   window.removerJogadorMultiplayer = (jogadorId) => {
     console.log("Removendo jogador:", jogadorId);
+    
+    // Remove temporariamente o jogador localmente
+    const jogadorIndex = window.jogadores.findIndex(j => j.id === jogadorId);
+    if (jogadorIndex !== -1) {
+      window.jogadores.splice(jogadorIndex, 1);
+      if (window.atualizarListaJogadores) {
+        window.atualizarListaJogadores();
+      }
+    }
+    
     remove(child(jogadoresRef, jogadorId))
       .then(() => {
         console.log("Jogador removido com sucesso!");
-        // Força atualização imediata
-        if (window.atualizarListaJogadores) {
-          window.atualizarListaJogadores();
-        }
         if (window.atualizarTela) {
           window.atualizarTela();
         }
       })
       .catch(error => {
         console.error("Erro ao remover jogador:", error);
+        // Restaura o jogador em caso de erro
+        if (window.jogadoresObj[jogadorId]) {
+          window.jogadores.push({ ...window.jogadoresObj[jogadorId], id: jogadorId });
+          if (window.atualizarListaJogadores) {
+            window.atualizarListaJogadores();
+          }
+        }
       });
   };
 
   window.atualizarNomeJogadorMultiplayer = (jogadorId, novoNome) => {
     console.log("Atualizando nome do jogador:", jogadorId, novoNome);
+    
+    // Atualiza temporariamente o nome localmente
+    const jogador = window.jogadores.find(j => j.id === jogadorId);
+    if (jogador) {
+      jogador.nome = novoNome;
+      if (window.atualizarListaJogadores) {
+        window.atualizarListaJogadores();
+      }
+    }
+    
     update(child(jogadoresRef, jogadorId), { nome: novoNome })
       .then(() => {
         console.log("Nome atualizado com sucesso!");
-        // Força atualização imediata
-        if (window.atualizarListaJogadores) {
-          window.atualizarListaJogadores();
-        }
         if (window.atualizarTela) {
           window.atualizarTela();
         }
       })
       .catch(error => {
         console.error("Erro ao atualizar nome do jogador:", error);
+        // Restaura o nome em caso de erro
+        if (window.jogadoresObj[jogadorId]) {
+          const jogador = window.jogadores.find(j => j.id === jogadorId);
+          if (jogador) {
+            jogador.nome = window.jogadoresObj[jogadorId].nome;
+            if (window.atualizarListaJogadores) {
+              window.atualizarListaJogadores();
+            }
+          }
+        }
       });
   };
 
   window.adicionarItemMultiplayer = (jogadorId, item) => {
     console.log("Adicionando item ao jogador:", jogadorId, item);
+    
+    // Adiciona temporariamente o item localmente
+    const jogador = window.jogadores.find(j => j.id === jogadorId);
+    if (jogador) {
+      jogador.itens = jogador.itens || [];
+      jogador.itens.push({ ...item });
+      jogador.total = (jogador.total || 0) + item.preco;
+      if (window.atualizarListaJogadores) {
+        window.atualizarListaJogadores();
+      }
+    }
+    
     const jogadorRef = child(jogadoresRef, jogadorId);
     get(jogadorRef).then((snapshot) => {
       const jogador = snapshot.val();
@@ -168,16 +218,20 @@ export function iniciarSyncSala(codigoSala) {
       })
       .then(() => {
         console.log("Item adicionado com sucesso!");
-        // Força atualização imediata
-        if (window.atualizarListaJogadores) {
-          window.atualizarListaJogadores();
-        }
         if (window.atualizarTela) {
           window.atualizarTela();
         }
       })
       .catch(error => {
         console.error("Erro ao adicionar item:", error);
+        // Remove o item em caso de erro
+        if (jogador) {
+          jogador.itens.pop();
+          jogador.total -= item.preco;
+          if (window.atualizarListaJogadores) {
+            window.atualizarListaJogadores();
+          }
+        }
       });
     }).catch(error => {
       console.error("Erro ao buscar jogador:", error);
@@ -186,6 +240,18 @@ export function iniciarSyncSala(codigoSala) {
 
   window.removerItemMultiplayer = (jogadorId, itemKey) => {
     console.log("Removendo item do jogador:", jogadorId, itemKey);
+    
+    // Remove temporariamente o item localmente
+    const jogador = window.jogadores.find(j => j.id === jogadorId);
+    if (jogador && jogador.itens && jogador.itens[itemKey]) {
+      const item = jogador.itens[itemKey];
+      jogador.itens.splice(itemKey, 1);
+      jogador.total -= item.preco;
+      if (window.atualizarListaJogadores) {
+        window.atualizarListaJogadores();
+      }
+    }
+    
     const jogadorRef = child(jogadoresRef, jogadorId);
     get(jogadorRef).then((snapshot) => {
       const jogador = snapshot.val();
@@ -202,16 +268,20 @@ export function iniciarSyncSala(codigoSala) {
         })
         .then(() => {
           console.log("Item removido com sucesso!");
-          // Força atualização imediata
-          if (window.atualizarListaJogadores) {
-            window.atualizarListaJogadores();
-          }
           if (window.atualizarTela) {
             window.atualizarTela();
           }
         })
         .catch(error => {
           console.error("Erro ao remover item:", error);
+          // Restaura o item em caso de erro
+          if (jogador) {
+            jogador.itens.splice(itemKey, 0, item);
+            jogador.total += item.preco;
+            if (window.atualizarListaJogadores) {
+              window.atualizarListaJogadores();
+            }
+          }
         });
       }
     }).catch(error => {
@@ -227,7 +297,6 @@ export function iniciarSyncSala(codigoSala) {
     const creditosInput = document.getElementById('creditosInput');
     if (creditosInput) {
       creditosInput.value = creditos;
-      // Força atualização imediata
       if (window.atualizarTela) {
         window.atualizarTela();
       }
@@ -242,16 +311,26 @@ export function iniciarSyncSala(codigoSala) {
     creditosInput.addEventListener('change', () => {
       const creditos = parseInt(creditosInput.value) || 0;
       console.log("Atualizando créditos:", creditos);
+      
+      // Atualiza temporariamente os créditos localmente
+      if (window.atualizarTela) {
+        window.atualizarTela();
+      }
+      
       set(creditosRef, creditos)
         .then(() => {
           console.log("Créditos atualizados com sucesso!");
-          // Força atualização imediata
-          if (window.atualizarTela) {
-            window.atualizarTela();
-          }
         })
         .catch(error => {
           console.error("Erro ao atualizar créditos:", error);
+          // Restaura os créditos em caso de erro
+          if (window.jogadoresObj) {
+            const creditosAnteriores = window.jogadoresObj.creditos || 0;
+            creditosInput.value = creditosAnteriores;
+            if (window.atualizarTela) {
+              window.atualizarTela();
+            }
+          }
         });
     });
   }
@@ -263,7 +342,6 @@ export function iniciarSyncSala(codigoSala) {
     const filtros = snapshot.val() || ["todos"];
     window.filtrosAtivos = filtros;
     window.filtroAtivo = filtros[0];
-    // Força atualização imediata
     if (window.atualizarTela) {
       window.atualizarTela();
     }
@@ -275,16 +353,28 @@ export function iniciarSyncSala(codigoSala) {
   window.toggleFiltroMultiplayer = (filtro) => {
     console.log("Atualizando filtros:", filtro);
     const novosFiltros = [filtro];
+    
+    // Atualiza temporariamente os filtros localmente
+    window.filtrosAtivos = novosFiltros;
+    window.filtroAtivo = filtro;
+    if (window.atualizarTela) {
+      window.atualizarTela();
+    }
+    
     set(filtrosRef, novosFiltros)
       .then(() => {
         console.log("Filtros atualizados com sucesso!");
-        // Força atualização imediata
-        if (window.atualizarTela) {
-          window.atualizarTela();
-        }
       })
       .catch(error => {
         console.error("Erro ao atualizar filtros:", error);
+        // Restaura os filtros em caso de erro
+        if (window.jogadoresObj) {
+          window.filtrosAtivos = window.jogadoresObj.filtros || ["todos"];
+          window.filtroAtivo = window.filtrosAtivos[0];
+          if (window.atualizarTela) {
+            window.atualizarTela();
+          }
+        }
       });
   };
 
@@ -299,7 +389,6 @@ export function iniciarSyncSala(codigoSala) {
           window.itensLoja[index].preco = preco;
         }
       });
-      // Força atualização imediata
       if (window.atualizarTela) {
         window.atualizarTela();
       }
@@ -311,16 +400,28 @@ export function iniciarSyncSala(codigoSala) {
   // Adiciona função para atualizar preço do item
   window.atualizarPrecoItemMultiplayer = (index, novoPreco) => {
     console.log("Atualizando preço do item:", index, novoPreco);
+    
+    // Atualiza temporariamente o preço localmente
+    if (window.itensLoja[index]) {
+      window.itensLoja[index].preco = novoPreco;
+      if (window.atualizarTela) {
+        window.atualizarTela();
+      }
+    }
+    
     update(child(itensRef, index), novoPreco)
       .then(() => {
         console.log("Preço atualizado com sucesso!");
-        // Força atualização imediata
-        if (window.atualizarTela) {
-          window.atualizarTela();
-        }
       })
       .catch(error => {
         console.error("Erro ao atualizar preço do item:", error);
+        // Restaura o preço em caso de erro
+        if (window.jogadoresObj && window.jogadoresObj.itens && window.jogadoresObj.itens[index]) {
+          window.itensLoja[index].preco = window.jogadoresObj.itens[index];
+          if (window.atualizarTela) {
+            window.atualizarTela();
+          }
+        }
       });
   };
 

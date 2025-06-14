@@ -18,7 +18,7 @@ function getLojaPath() {
   // Garante que funciona tanto local quanto no GitHub Pages
   let path = window.location.pathname;
   if (path.endsWith('index.html')) {
-    path = path.replace(/index\.html$/, '');
+    path = path.replace(/index\.html$/, '');  
   }
   if (!path.endsWith('/')) {
     path += '/';
